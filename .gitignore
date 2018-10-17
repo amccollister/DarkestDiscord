@@ -109,3 +109,10 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# PyCharm
+.idea/
+
+# Misc/Custom
+config/config.ini
+config/permissions.ini
