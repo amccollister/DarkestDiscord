@@ -1,4 +1,4 @@
-from bot import DarkestBot
+from src.bot import DarkestBot
 
 
 def main():

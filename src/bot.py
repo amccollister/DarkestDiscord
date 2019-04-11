@@ -1,5 +1,5 @@
 import sys
-import constants
+import src.constants as constants
 
 from discord.ext.commands import Bot
 
@@ -21,9 +21,9 @@ class DarkestBot(Bot):
         print(self.user.name)
         print(self.user.id)
         print("------------")
-        self.load_extension("commands.chat")
+        self.load_extension("src.chat")
         #for plugin in constants.PLUGINS:
-        #    self.load_extension("extensions.{}".format(plugin))
+        #    self.load_extension("src.{}".format(plugin))
 
     async def on_message(self, message):
         #str_id = str(message.channel.id)
