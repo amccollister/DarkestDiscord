@@ -1,7 +1,7 @@
 import src.utils as util
 from discord.ext import commands
 
-
+# TODO: properly implement the setters for town, dungeon, and prefix along with pinging owner
 class SetupCog(commands.Cog):
     def __init__(self, bot):
         #grab bot attributes
@@ -49,26 +49,36 @@ class SetupCog(commands.Cog):
                 else:
                     await util.send(ctx, "That plugin does not exist or is not currently installed.")
 
-    @commands.command() #guild owner only
+    @commands.command()
+    @commands.check(util.check_guild_owner)
     async def set_town(self, ctx):
-        await util.send(ctx, "Town channel has been set!")
+        guild = ctx.guild.id
+        channel = ctx.channel.id
+        self.bot.cur.execute("UPDATE CHANNEL SET townID = {} WHERE guildID = {}".format(channel, guild))
+        self.bot.con.commit()
+        await util.send(ctx, "This is now the town channel.")
 
-    @commands.command() #guild owner only
+    @commands.command()
+    @commands.check(util.check_guild_owner)
     async def set_dungeon(self, ctx):
-        await util.send(ctx, "Dungeon channel has been set!")
+        guild = ctx.guild.id
+        channel = ctx.channel.id
+        self.bot.cur.execute("UPDATE CHANNEL SET dungeonID = {} WHERE guildID = {}".format(channel, guild))
+        self.bot.con.commit()
+        await util.send(ctx, "This is now the dungeon channel.")
 
-    @commands.command()  # guild owner only (sanitize that input kiddo)
+    @commands.command()
+    @commands.check(util.check_guild_owner)
     async def set_prefix(self, ctx, arg):
-        await util.send(ctx, "Prefix has been set to {}")
+        await util.send(ctx, "The prefix has been set to {}".format(arg))
 
-    @commands.command() #guild owner only
+    @commands.command()
     async def town(self, ctx):
         await util.send(ctx, "The town is located at <insert reference here>")
 
-    @commands.command() #guild owner only
+    @commands.command()
     async def dungeon(self, ctx):
         await util.send(ctx, "The dungeon is located at <insert reference here>!")
-
 
 
 def setup(bot):

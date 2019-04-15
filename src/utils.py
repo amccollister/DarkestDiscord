@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 
 
 def make_embed(ctx, text, *image):
@@ -21,3 +22,10 @@ async def send(ctx, text, *image):
 
 async def send_embed(ctx, embed):
     await ctx.send(embed=embed)
+
+
+def check_guild_owner(ctx):
+    check = ctx.guild.owner.id == ctx.author.id
+    if not check:
+        raise commands.CheckFailure(message="You must be the guild owner to use this command.")
+    return check
