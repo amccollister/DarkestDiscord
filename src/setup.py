@@ -19,6 +19,7 @@ class SetupCog(commands.Cog):
         """
         await util.send(ctx, "Pong.")
 
+    # TODO: rewrite this mess... like for real
     @commands.command()
     async def help(self, ctx, *arg):
         """
@@ -29,16 +30,16 @@ class SetupCog(commands.Cog):
         Gives you help based on the desired plugin or command you specify.
         If no arguments are specified, it displays all available plugins.
         """
-        cogs = ctx.bot.cogs.keys()
+        cogs = ctx.bot.cogs
         if not arg:
             text = "__**PLUGINS**__\n"
-            for cog in ctx.bot.cogs.keys():
+            for cog in cogs.keys():
                 text += cog[:-3] + "\n"
             return await util.send(ctx, text)
         else:
             cog = arg[0].lower().capitalize() + "Cog"
             if cog in cogs:
-                command = [x.name for x in ctx.bot.get_cog_commands(cog)]
+                command = [x.name for x in cog.get_commands()]
                 text = "__**{0} Commands**__\n".format(cog[:-3])
                 for c in command:
                     text += c + "\n"
@@ -80,20 +81,16 @@ class SetupCog(commands.Cog):
 
     @commands.command()
     async def town(self, ctx):
-        self.bot.cur.execute("SELECT townID from CHANNEL where guildID = {}".format(ctx.guild.id))
-        id = self.bot.cur.fetchone()[0]
-        if not id:
+        channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
+        if not channel:
             return await util.send(ctx, "The town has not been set.")
-        channel = self.bot.get_channel(id)
         await util.send(ctx, "The town can be found at: {}".format(channel.mention))
 
     @commands.command()
     async def dungeon(self, ctx):
-        self.bot.cur.execute("SELECT dungeonID from CHANNEL where guildID = {}".format(ctx.guild.id))
-        id = self.bot.cur.fetchone()[0]
-        if not id:
+        channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
+        if not channel:
             return await util.send(ctx, "The dungeon has not been set.")
-        channel = self.bot.get_channel(id)
         await util.send(ctx, "The dungeon can be found at: {}".format(channel.mention))
 
 

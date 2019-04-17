@@ -34,3 +34,9 @@ def check_guild_owner(ctx):
 def get_pre(bot, message):
     bot.cur.execute("SELECT prefix FROM CHANNEL WHERE guildID = {}".format(message.guild.id))
     return bot.cur.fetchone()[0]
+
+
+def get_db_channel(bot, name, guild_id):
+    bot.cur.execute("SELECT {}ID FROM CHANNEL WHERE guildID = {}".format(name, guild_id))
+    channel_id = bot.cur.fetchone()[0]
+    return bot.get_channel(channel_id)
