@@ -1,3 +1,4 @@
+import re
 import src.utils as util
 from discord.ext import commands
 
@@ -73,8 +74,9 @@ class SetupCog(commands.Cog):
     @commands.check(util.check_guild_owner)
     async def set_prefix(self, ctx, arg):
         guild = ctx.guild.id
-        if " " in arg:
-            raise commands.CommandError(message="The prefix cannot have spaces.")
+        print(arg)
+        if any(ch in arg for ch in [" ", "\'", "\""]):
+            raise commands.CommandError(message="The prefix cannot have spaces, \', or \".")
         self.bot.cur.execute("UPDATE CHANNEL SET prefix = '{}' WHERE guildID = {}".format(arg, guild))
         self.bot.con.commit()
         await util.send(ctx, "The prefix has been set to {}".format(arg))

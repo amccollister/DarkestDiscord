@@ -9,7 +9,9 @@ class TownCog(commands.Cog):
 
     async def cog_before_invoke(self, ctx):
         channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
-        if channel.id != ctx.channel.id:
+        if not channel:
+            raise commands.CommandError(message="You may not use town commands until the channel has been set.")
+        elif channel.id != ctx.channel.id:
             raise commands.CommandError(message="You may not use town commands outside of {}.".format(channel.mention))
 
     @commands.command()
