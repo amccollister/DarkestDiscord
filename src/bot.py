@@ -1,6 +1,6 @@
 import sys
 import asyncio
-from src import utils
+import src.utils as util
 
 import sqlite3 as sql
 import src.constants as constants
@@ -10,7 +10,8 @@ from discord.ext.commands import Bot
 
 class DarkestBot(Bot):
     def __init__(self):
-        super().__init__(constants.DEFAULT_PREFIX)
+        # initialize bot
+        super().__init__(command_prefix=util.get_pre)
         self.remove_command('help')  # We will be implementing our own.
 
         # establish sql connection here
@@ -19,16 +20,11 @@ class DarkestBot(Bot):
         with open('db/schema.sql') as schema:
             self.cur.executescript(schema.read())
 
-        #start background tasks (https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py)
+        # start background tasks (https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py)
         self.sync = self.loop.create_task(self.sync_servers())
 
     def run(self):
         super().run(constants.BOT_TOKEN)
-
-    def get_prefix(self, message):
-        #TODO: dynamic prefix thing
-        #https://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html#bot
-        pass
 
     async def on_ready(self):
         print("------------")
@@ -40,7 +36,7 @@ class DarkestBot(Bot):
         #for plugin in constants.PLUGINS:
         #    self.load_extension("src.{}".format(plugin))
 
-    #TODO: dynamic prefix using command_prefix
+    #TODO: dynamic prefix using command_prefix (ALSO COG BEFORE INVOKE)
     async def on_message(self, message):
         if message.author.id != self.user.id:
             print("{0.author}: {0.content}".format(message))
@@ -52,7 +48,7 @@ class DarkestBot(Bot):
 
     async def on_command_error(self, ctx, e):
         ctx.command = "ERROR"
-        await utils.send(ctx, e)
+        await util.send(ctx, e)
 
     # synchronize all connected servers
     async def sync_servers(self):
@@ -67,4 +63,4 @@ class DarkestBot(Bot):
                                      .format(id=guild, pre=constants.DEFAULT_PREFIX))
                     self.con.commit()
             print(db_guilds)
-            await asyncio.sleep(60)
+            await asyncio.sleep(600)

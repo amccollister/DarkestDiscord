@@ -1,7 +1,8 @@
 import src.utils as util
 from discord.ext import commands
 
-# TODO: properly implement the setters for town, dungeon, and prefix along with pinging owner
+# TODO: make the getters and setters a util method
+
 class SetupCog(commands.Cog):
     def __init__(self, bot):
         #grab bot attributes
@@ -70,15 +71,30 @@ class SetupCog(commands.Cog):
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_prefix(self, ctx, arg):
+        guild = ctx.guild.id
+        if " " in arg:
+            raise commands.CommandError(message="The prefix cannot have spaces.")
+        self.bot.cur.execute("UPDATE CHANNEL SET prefix = '{}' WHERE guildID = {}".format(arg, guild))
+        self.bot.con.commit()
         await util.send(ctx, "The prefix has been set to {}".format(arg))
 
     @commands.command()
     async def town(self, ctx):
-        await util.send(ctx, "The town is located at <insert reference here>")
+        self.bot.cur.execute("SELECT townID from CHANNEL where guildID = {}".format(ctx.guild.id))
+        id = self.bot.cur.fetchone()[0]
+        if not id:
+            return await util.send(ctx, "The town has not been set.")
+        channel = self.bot.get_channel(id)
+        await util.send(ctx, "The town can be found at: {}".format(channel.mention))
 
     @commands.command()
     async def dungeon(self, ctx):
-        await util.send(ctx, "The dungeon is located at <insert reference here>!")
+        self.bot.cur.execute("SELECT dungeonID from CHANNEL where guildID = {}".format(ctx.guild.id))
+        id = self.bot.cur.fetchone()[0]
+        if not id:
+            return await util.send(ctx, "The dungeon has not been set.")
+        channel = self.bot.get_channel(id)
+        await util.send(ctx, "The dungeon can be found at: {}".format(channel.mention))
 
 
 def setup(bot):

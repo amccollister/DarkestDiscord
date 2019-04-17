@@ -29,3 +29,8 @@ def check_guild_owner(ctx):
     if not check:
         raise commands.CheckFailure(message="You must be the guild owner to use this command.")
     return check
+
+
+def get_pre(bot, message):
+    bot.cur.execute("SELECT prefix FROM CHANNEL WHERE guildID = {}".format(message.guild.id))
+    return bot.cur.fetchone()[0]
