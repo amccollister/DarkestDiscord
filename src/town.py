@@ -19,5 +19,10 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
 
+    @commands.command()
+    async def stagecoach(self, ctx):
+        await util.send(ctx, "Adventurers displayed here")
+
+
 def setup(bot):
     bot.add_cog(TownCog(bot))
