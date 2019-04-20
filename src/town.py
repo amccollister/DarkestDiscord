@@ -18,7 +18,6 @@ class TownCog(commands.Cog):
     async def shop(self, ctx):
         await util.send(ctx, "You entered the shop!")
 
-
     @commands.command()
     async def stagecoach(self, ctx):
         await util.send(ctx, "Adventurers displayed here")
