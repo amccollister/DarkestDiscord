@@ -2,7 +2,6 @@ import re
 import src.utils as util
 from discord.ext import commands
 
-# TODO: make the getters and setters a util method
 
 class SetupCog(commands.Cog):
     def __init__(self, bot):

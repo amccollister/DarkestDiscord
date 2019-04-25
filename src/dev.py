@@ -1,6 +1,8 @@
 import src.utils as util
 from discord.ext import commands
 
+from datetime import datetime
+
 
 class DevCog(commands.Cog):
     def __init__(self, bot):
@@ -12,10 +14,21 @@ class DevCog(commands.Cog):
             raise commands.CommandError(message="You may not use developer commands")
 
     @commands.command()
-    async def dev(self, ctx):
-        self.bot.cur.execute("SELECT * FROM ITEM_LIST")
-        output = self.bot.cur.fetchall()
-        await util.send(ctx, output)
+    async def users(self, ctx):
+        users = self.bot.users
+        await util.send(ctx, "I can see {} people".format(len(users)))
+
+    @commands.command()
+    async def insert(self, ctx):
+        now = datetime.now()
+        self.bot.cur.execute("BEGIN TRANSACTION") # begin trans and commit is very important
+        for u in self.bot.users:
+            self.bot.cur.execute("INSERT OR IGNORE INTO PLAYERS VALUES({}, 0, 0, 0, 0, 0)".format(u.id))
+        self.bot.cur.execute("COMMIT")
+        self.bot.con.commit()
+        passed = datetime.now() - now
+        await util.send(ctx, "Added {} people in {} seconds".format(len(self.bot.users), passed.total_seconds()))
+
 
 
 def setup(bot):

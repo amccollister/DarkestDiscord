@@ -31,6 +31,8 @@ def check_guild_owner(ctx):
     return check
 
 
+### DB commands ###
+
 def get_pre(bot, message):
     bot.cur.execute("SELECT prefix FROM CHANNEL WHERE guildID = {}".format(message.guild.id))
     return bot.cur.fetchone()[0]
@@ -40,3 +42,11 @@ def get_db_channel(bot, name, guild_id):
     bot.cur.execute("SELECT {}ID FROM CHANNEL WHERE guildID = {}".format(name, guild_id))
     channel_id = bot.cur.fetchone()[0]
     return bot.get_channel(channel_id)
+
+
+def add_new_players(bot, id_list):
+    bot.cur.execute("BEGIN TRANSACTION")  # begin trans and commit is very important
+    for uid in id_list:
+        bot.cur.execute("INSERT OR IGNORE INTO PLAYERS VALUES({}, 0, 0, 0, 0, 0)".format(uid))
+    bot.cur.execute("COMMIT")
+    bot.con.commit()
