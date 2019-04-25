@@ -1,4 +1,4 @@
-import re
+import src.constants as constants
 import src.utils as util
 from discord.ext import commands
 
@@ -17,7 +17,7 @@ class SetupCog(commands.Cog):
         Tests the responsiveness of the bot.
         Pong.
         """
-        await util.send(ctx, "Pong.")
+        msg = await util.send(ctx, "Pong.")
 
     # TODO: rewrite this mess... like for real
     @commands.command()

@@ -16,14 +16,15 @@ class DarkestBot(Bot):
 
         # establish sql connection here
         self.con = sql.connect("db/database.db", isolation_level=None)
+        self.con.row_factory = sql.Row
         self.cur = self.con.cursor()
         with open('db/schema.sql') as schema:
             self.cur.executescript(schema.read())
 
         # start background tasks (https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py)
         # might not be needed?
-        # self.server_sync = self.loop.create_task(self.sync_servers())
-        # self.player_sync = self.loop.create_task(self.sync_players())
+        self.server_sync = self.loop.create_task(self.sync_servers())
+        self.player_sync = self.loop.create_task(self.sync_players())
 
     def run(self):
         super().run(constants.BOT_TOKEN)
@@ -73,7 +74,7 @@ class DarkestBot(Bot):
         while not self.is_closed():
             now = datetime.now()
             id_list = [u.id for u in self.users]
-            util.add_new_players(self, id_list)
+            util.add_players(self, id_list)
             time = datetime.now() - now
             print("Updated records for {} users in {} seconds".format(len(self.users), time.seconds))
             await asyncio.sleep(60)

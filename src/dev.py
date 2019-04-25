@@ -19,16 +19,12 @@ class DevCog(commands.Cog):
         await util.send(ctx, "I can see {} people".format(len(users)))
 
     @commands.command()
-    async def insert(self, ctx):
-        now = datetime.now()
-        self.bot.cur.execute("BEGIN TRANSACTION") # begin trans and commit is very important
-        for u in self.bot.users:
-            self.bot.cur.execute("INSERT OR IGNORE INTO PLAYERS VALUES({}, 0, 0, 0, 0, 0)".format(u.id))
-        self.bot.cur.execute("COMMIT")
-        self.bot.con.commit()
-        passed = datetime.now() - now
-        await util.send(ctx, "Added {} people in {} seconds".format(len(self.bot.users), passed.total_seconds()))
-
+    async def get(self, ctx):
+        self.bot.cur.execute("SELECT * FROM PLAYERS")
+        p = self.bot.cur.fetchone()
+        out = ["{} {}".format(x, p[x]) for x in p.keys()]
+        output = "\n".join(out)
+        await util.send(ctx, output)
 
 
 def setup(bot):

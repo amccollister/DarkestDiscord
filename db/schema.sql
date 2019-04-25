@@ -68,12 +68,16 @@ INSERT OR IGNORE INTO ADVENTURER_LIST VALUES(17, "Vestal");
 
 
 CREATE TABLE IF NOT EXISTS PLAYERS(
-    playerID    INTEGER PRIMARY KEY NOT NULL,
-    gold        INTEGER NOT NULL,
-    busts       INTEGER NOT NULL,
-    portraits   INTEGER NOT NULL,
-    deeds       INTEGER NOT NULL,
-    crests      INTEGER NOT NULL);
+    playerID            INTEGER PRIMARY KEY NOT NULL,
+    gold                INTEGER NOT NULL DEFAULT 0,
+    busts               INTEGER NOT NULL DEFAULT 0,
+    portraits           INTEGER NOT NULL DEFAULT 0,
+    deeds               INTEGER NOT NULL DEFAULT 0,
+    crests              INTEGER NOT NULL DEFAULT 0,
+    stagecoach_size     INTEGER NOT NULL DEFAULT 0,
+    stagecoach_level    INTEGER NOT NULL DEFAULT 0,
+    blacksmith          INTEGER NOT NULL DEFAULT 0,
+    armory              INTEGER NOT NULL DEFAULT 0);
 
 
 CREATE TABLE IF NOT EXISTS ADVENTURERS(
@@ -88,6 +92,7 @@ CREATE TABLE IF NOT EXISTS ADVENTURERS(
 
 
 CREATE TABLE IF NOT EXISTS STAGECOACH(
+    stagecoachID INTEGER PRIMARY KEY NOT NULL,
     playerID INTEGER NOT NULL,
     advID INTEGER NOT NULL,
     level INTEGER NOT NULL,
