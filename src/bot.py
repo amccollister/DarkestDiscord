@@ -7,7 +7,7 @@ import src.constants as constants
 from discord.ext.commands import Bot
 from datetime import datetime
 
-
+# TODO: make classes
 class DarkestBot(Bot):
     def __init__(self):
         # initialize bot

@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS ITEM_LIST(
 
 CREATE TABLE IF NOT EXISTS ADVENTURER_LIST(
     advID           INTEGER PRIMARY KEY NOT NULL,
-    name            TEXT NOT NULL UNIQUE),
-    hp              INTEGER NOT NULL),
+    name            TEXT NOT NULL UNIQUE,
+    hp              INTEGER NOT NULL,
     dodge           INTEGER NOT NULL,
     prot            INTEGER NOT NULL,
     spd             INTEGER NOT NULL,
