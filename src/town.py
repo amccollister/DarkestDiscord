@@ -13,12 +13,12 @@ class TownCog(commands.Cog):
         self.bot = bot
 
         # Town Background Tasks
-        # TODO: random timed adventurers in stagecoach unique to each player
         # self.stagecoach_refresh = self.bot.loop.create_task(self.refresh_stagecoach())
 
     async def refresh_stagecoach(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
+            # TODO: deduct one minute from all heroes in stagecoaches
             print("Updated x chars in the stagecoach in x seconds")
             await asyncio.sleep(60)
 
@@ -35,14 +35,28 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def stagecoach(self, ctx):
-        pass
-        # run the check stagecoach util. update with level cap and hero cap. then display. Sort by time
-        # use a dict
-
-
-        #msg = await util.send(ctx, output)
-        #for emote in constants.UNICODE_DIGITS[:total]:
-        #    await msg.add_reaction(emote)
+        output = ""
+        stagecoach = util.check_stagecoach(self.bot, ctx.author.id)
+        react_heroes = {v:k for (k,v) in zip(stagecoach, constants.UNICODE_DIGITS)}
+        for hero in stagecoach:
+            name = util.get_adventurer(self.bot, hero["advID"])["name"]
+            output += "Level {} {} | Leaving in {} minute(s)\n".format(hero["level"], name, hero["time"])
+        msg = await util.send(ctx, output)
+        for emote in constants.UNICODE_DIGITS[:len(stagecoach)]:
+            await msg.add_reaction(emote)
+        while True:
+            try:
+                # wait_for takes the parameters for the event. on_reaction_add has two parameters
+                reaction, user = await self.bot.wait_for("reaction_add",
+                                                         check=lambda r, u: u.id == ctx.author.id,
+                                                         timeout=constants.STAGECOACH_REACT_TIME_LIMIT)
+                if reaction.emoji in constants.UNICODE_DIGITS[:len(stagecoach)]:
+                    hero = react_heroes[reaction.emoji]
+                    name = util.get_adventurer(self.bot, hero["advID"])["name"]
+                    await util.send(ctx, "You hired the Level {} {}!".format(hero["level"], name))
+                    # TODO: remove hero from stagecoach and add hero to roster
+            except asyncio.TimeoutError:
+                break
 
     @commands.command()
     async def roster(self, ctx):

@@ -51,6 +51,7 @@ class SetupCog(commands.Cog):
                 else:
                     await util.send(ctx, "That plugin does not exist or is not currently installed.")
 
+    # TODO: set_db_channel
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_town(self, ctx):
