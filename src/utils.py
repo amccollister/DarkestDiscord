@@ -87,3 +87,20 @@ def get_stagecoach(bot, player_id):
     bot.cur.execute("SELECT * FROM STAGECOACH WHERE playerID = {}".format(player_id))
     stagecoach = bot.cur.fetchall()
     return stagecoach
+
+
+def hire_adventurer(bot, player_id, adv):
+    # check if the hero is still there
+    bot.cur.execute("SELECT * FROM STAGECOACH WHERE stagecoachID = {}".format(adv["stagecoachID"]))
+    if not bot.cur.fetchone():
+        return "The adventurer is no longer available."
+    bot.cur.execute("DELETE FROM STAGECOACH WHERE stagecoachID = {}".format(adv["stagecoachID"]))
+    name = get_adventurer(bot, adv["advID"])["name"]
+    ins = [adv["advID"], player_id, adv["level"], name]
+    bot.cur.execute("INSERT INTO HEROES (advID, playerID, level, character_name) VALUES({},{},{},\'{}\')".format(*ins))
+    return "HIRED: Level {} {}".format(adv["level"], name)
+
+
+def get_roster(bot, player_id):
+    bot.cur.execute("SELECT * FROM HEROES WHERE playerID = {}".format(player_id))
+    return bot.cur.fetchall()

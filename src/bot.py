@@ -76,5 +76,5 @@ class DarkestBot(Bot):
             id_list = [u.id for u in self.users]
             util.add_players(self, id_list)
             time = datetime.now() - now
-            print("Updated records for {} users in {} seconds".format(len(self.users), time.seconds))
+            print("SYNC PLAYERS | USERS {} | TIME {}".format(len(self.users), time.microseconds/10**6))
             await asyncio.sleep(60)
