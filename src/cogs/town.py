@@ -2,9 +2,11 @@ import random
 import asyncio
 import src.utils as util
 import src.constants as constants
-from datetime import datetime
 
+from datetime import datetime
 from discord.ext import commands
+from src.classes.Player import Player
+from src.classes.Stagecoach import Stagecoach
 
 
 class TownCog(commands.Cog):
@@ -18,20 +20,11 @@ class TownCog(commands.Cog):
     async def refresh_stagecoach(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
-            now = datetime.now()
-            self.bot.cur.execute("SELECT * FROM STAGECOACH")
-            heroes_before = len(self.bot.cur.fetchall())
-            self.bot.cur.execute("UPDATE STAGECOACH SET time = time - 1")
-            self.bot.cur.execute("DELETE FROM STAGECOACH where time < 1")
-            self.bot.cur.execute("SELECT * FROM STAGECOACH")
-            heroes_after = len(self.bot.cur.fetchall())
-            print("STAGECOACH | UPDATED {} | DELETED {} | TIME {}".format(heroes_before,
-                                                                          heroes_before-heroes_after,
-                                                                          (datetime.now() - now).microseconds/10**6))
+            Stagecoach.refresh_stagecoach(self.bot)
             await asyncio.sleep(60)
 
     async def cog_before_invoke(self, ctx):
-        channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
+        channel = util.get_db_channel(ctx.bot, "town", ctx.guild.id)
         if not channel:
             raise commands.CommandError(message="You may not use town commands until the channel has been set.")
         elif channel.id != ctx.channel.id:
@@ -44,10 +37,11 @@ class TownCog(commands.Cog):
     @commands.command()
     async def stagecoach(self, ctx):
         output = ""
-        stagecoach = util.check_stagecoach(self.bot, ctx.author.id)
+        player = Player(ctx.bot, ctx.author.id)
+        stagecoach = player.stagecoach.adventurers
         react_heroes = {v: k for (k, v) in zip(stagecoach, constants.UNICODE_DIGITS)}
         for hero in stagecoach:
-            name = util.get_adventurer(self.bot, hero["advID"])["name"]
+            name = util.get_adventurer(ctx.bot, hero["advID"])["name"]
             output += "Level {} {} | Leaving in {} minute(s)\n".format(hero["level"], name, hero["time"])
         msg = await util.send(ctx, output)
         for emote in constants.UNICODE_DIGITS[:len(stagecoach)]:
@@ -55,11 +49,11 @@ class TownCog(commands.Cog):
         while True:
             try:
                 # wait_for takes the parameters for the event. on_reaction_add has two parameters
-                reaction, user = await self.bot.wait_for("reaction_add",
+                reaction, user = await ctx.bot.wait_for("reaction_add",
                                                          check=lambda r, u: u.id == ctx.author.id,
                                                          timeout=constants.STAGECOACH_REACT_TIME_LIMIT)
                 if reaction.emoji in constants.UNICODE_DIGITS[:len(stagecoach)]:
-                    hired = util.hire_adventurer(self.bot, ctx.author.id, react_heroes[reaction.emoji])
+                    hired = util.hire_adventurer(ctx.bot, ctx.author.id, react_heroes[reaction.emoji])
                     await util.send(ctx, hired)
             except asyncio.TimeoutError:
                 break
@@ -67,7 +61,7 @@ class TownCog(commands.Cog):
     @commands.command()
     async def roster(self, ctx):
         output = ""
-        heroes = util.get_roster(self.bot, ctx.author.id)
+        heroes = util.get_roster(ctx.bot, ctx.author.id)
         if not heroes:
             output = "You have no heroes in your roster."
         else:

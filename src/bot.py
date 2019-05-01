@@ -2,6 +2,7 @@ import sys
 import asyncio
 import src.utils as util
 import sqlite3 as sql
+from src.classes.Player import Player
 import src.constants as constants
 
 from discord.ext.commands import Bot
@@ -23,8 +24,6 @@ class DarkestBot(Bot):
 
         # start background tasks (https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py)
         # might not be needed?
-        self.server_sync = self.loop.create_task(self.sync_servers())
-        self.player_sync = self.loop.create_task(self.sync_players())
 
     def run(self):
         super().run(constants.BOT_TOKEN)
@@ -53,28 +52,3 @@ class DarkestBot(Bot):
     async def on_command_error(self, ctx, e):
         ctx.command = "ERROR"
         await util.send(ctx, e)
-
-    # synchronize all connected servers
-    async def sync_servers(self):
-        await self.wait_until_ready()
-        while not self.is_closed():
-            self.cur.execute("SELECT * FROM CHANNEL")
-            db_guilds = self.cur.fetchall()
-            bot_guilds = [x.id for x in self.guilds]
-            for guild in bot_guilds:
-                if guild not in db_guilds:
-                    self.cur.execute("INSERT OR IGNORE INTO CHANNEL VALUES({id}, NULL, NULL, '{pre}')"
-                                     .format(id=guild, pre=constants.DEFAULT_PREFIX))
-                    self.con.commit()
-            await asyncio.sleep(60)
-
-    # synchronize all connected players
-    async def sync_players(self):
-        await self.wait_until_ready()
-        while not self.is_closed():
-            now = datetime.now()
-            id_list = [u.id for u in self.users]
-            util.add_players(self, id_list)
-            time = datetime.now() - now
-            print("SYNC PLAYERS | USERS {} | TIME {}".format(len(self.users), time.microseconds/10**6))
-            await asyncio.sleep(60)

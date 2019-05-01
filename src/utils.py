@@ -2,6 +2,7 @@ import discord
 import random
 import src.constants as constants
 from discord.ext import commands
+from src.classes.Player import Player
 
 
 def make_embed(ctx, text, *image):
@@ -47,48 +48,7 @@ def get_adventurer(bot, adventurer_id):
     bot.cur.execute("SELECT * FROM ADVENTURER_LIST WHERE advID = {}".format(adventurer_id))
     return bot.cur.fetchone()
 
-
-def add_players(bot, id_list):
-    bot.cur.execute("BEGIN TRANSACTION")  # begin trans and commit is very important
-    for uid in id_list:
-        bot.cur.execute("INSERT OR IGNORE INTO PLAYERS (playerID) VALUES({})".format(uid))
-    bot.cur.execute("COMMIT")
-    bot.con.commit()
-
-
-def get_player(bot, player_id):
-    bot.cur.execute("SELECT * FROM PLAYERS WHERE playerID = {}".format(player_id))
-    player = bot.cur.fetchone()
-    return player
-
-
-def check_stagecoach(bot, player_id):
-    player = get_player(bot, player_id)
-    bot.cur.execute("SELECT * FROM STAGECOACH WHERE playerID = {}".format(player_id))
-    heroes = len(bot.cur.fetchall())
-    while heroes < player["stagecoach_size"] + constants.STAGECOACH_BASE_SIZE:
-        level = random.randint(0, player["stagecoach_level"])
-        time = random.randint(1, constants.STAGECOACH_TIME_LIMIT)
-        add_stagecoach(bot, player_id, level, time)
-        heroes += 1
-    return get_stagecoach(bot, player_id)
-
-
-def add_stagecoach(bot, player_id, level, time):
-    bot.cur.execute("SELECT * FROM ADVENTURER_LIST")
-    adventurers = bot.cur.fetchall()
-    new_adventurer = random.choice(adventurers)
-    insert = [player_id, new_adventurer["advID"], level, time]
-    bot.cur.execute("INSERT INTO STAGECOACH (playerID, advID, level, time) VALUES({}, {}, {}, {})".format(*insert))
-    bot.con.commit()
-
-
-def get_stagecoach(bot, player_id):
-    bot.cur.execute("SELECT * FROM STAGECOACH WHERE playerID = {}".format(player_id))
-    stagecoach = bot.cur.fetchall()
-    return stagecoach
-
-
+# TODO: put this somewhere appropriate
 def hire_adventurer(bot, player_id, adv):
     # check if the hero is still there
     bot.cur.execute("SELECT * FROM STAGECOACH WHERE stagecoachID = {}".format(adv["stagecoachID"]))

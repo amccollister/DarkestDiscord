@@ -17,7 +17,7 @@ class SetupCog(commands.Cog):
         Tests the responsiveness of the bot.
         Pong.
         """
-        msg = await util.send(ctx, "Pong.")
+        await util.send(ctx, "Pong.")
 
     # TODO: rewrite this mess... like for real
     @commands.command()
