@@ -34,7 +34,6 @@ class TownCog(commands.Cog):
     async def shop(self, ctx):
         await util.send(ctx, "You entered the shop!")
 
-    #TODO: fix this
     @commands.command()
     async def stagecoach(self, ctx):
         output = ""

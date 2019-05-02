@@ -3,6 +3,7 @@ from src.classes.Stagecoach import Stagecoach
 # TODO: use this class to add a player if they don't exist (dingus)
 # TODO: store the stagecoach and roster in the player class
 
+
 class Player(object):
     def __init__(self, bot, player_id):
         self.bot = bot

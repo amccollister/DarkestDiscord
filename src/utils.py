@@ -46,18 +46,5 @@ def set_db_channel(bot, name, channel_id, guild_id):
     bot.db.update_row("CHANNEL", "{}ID = {}".format(name, channel_id), "guildID = {}".format(guild_id))
 
 
-# TODO: put this somewhere appropriate seriously
-def hire_adventurer(bot, player_id, adv):
-    # check if the hero is still there
-    bot.cur.execute("SELECT * FROM STAGECOACH WHERE stagecoachID = {}".format(adv["stagecoachID"]))
-    if not bot.cur.fetchone():
-        return "The adventurer is no longer available."
-    bot.cur.execute("DELETE FROM STAGECOACH WHERE stagecoachID = {}".format(adv["stagecoachID"]))
-    name = get_adventurer(bot, adv["advID"])["name"]
-    ins = [adv["advID"], player_id, adv["level"], name]
-    bot.cur.execute("INSERT INTO HEROES (advID, playerID, level, character_name) VALUES({},{},{},\'{}\')".format(*ins))
-    return "HIRED: Level {} {}".format(adv["level"], name)
-
-
 def get_roster(bot, player_id):
     return bot.db.get_row("HEROES", "playerID", player_id)

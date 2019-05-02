@@ -9,7 +9,6 @@ from src.classes.Player import Player
 from src.classes.SQLHandler import SQLHandler
 from datetime import datetime
 
-# TODO: make classes
 class DarkestBot(Bot):
     def __init__(self):
         # initialize bot
@@ -36,7 +35,6 @@ class DarkestBot(Bot):
             columns = ["guildID", "prefix"]
             values = [gid, constants.DEFAULT_PREFIX]
             self.db.insert_row("CHANNEL", columns, values)
-
 
     async def on_ready(self):
         self.sync_servers()
