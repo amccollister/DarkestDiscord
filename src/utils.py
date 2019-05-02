@@ -33,22 +33,20 @@ def check_guild_owner(ctx):
 ### DB commands ###
 
 def get_pre(bot, message):
-    bot.cur.execute("SELECT prefix FROM CHANNEL WHERE guildID = {}".format(message.guild.id))
-    return bot.cur.fetchone()[0]
+    row = bot.db.get_row("CHANNEL", "guildID", message.guild.id)
+    return row["prefix"]
 
 
 def get_db_channel(bot, name, guild_id):
-    bot.cur.execute("SELECT {}ID FROM CHANNEL WHERE guildID = {}".format(name, guild_id))
-    channel_id = bot.cur.fetchone()[0]
-    return bot.get_channel(channel_id)
+    row = bot.db.get_row("CHANNEL", "guildID", guild_id)
+    return bot.get_channel(row["{}ID".format(name)])
 
 
-# Adventurers are in the stagecoach. Heroes are in the party.
-def get_adventurer(bot, adventurer_id):
-    bot.cur.execute("SELECT * FROM ADVENTURER_LIST WHERE advID = {}".format(adventurer_id))
-    return bot.cur.fetchone()
+def set_db_channel(bot, name, channel_id, guild_id):
+    bot.db.update_row("CHANNEL", "{}ID = {}".format(name, channel_id), "guildID = {}".format(guild_id))
 
-# TODO: put this somewhere appropriate
+
+# TODO: put this somewhere appropriate seriously
 def hire_adventurer(bot, player_id, adv):
     # check if the hero is still there
     bot.cur.execute("SELECT * FROM STAGECOACH WHERE stagecoachID = {}".format(adv["stagecoachID"]))
@@ -62,5 +60,4 @@ def hire_adventurer(bot, player_id, adv):
 
 
 def get_roster(bot, player_id):
-    bot.cur.execute("SELECT * FROM HEROES WHERE playerID = {}".format(player_id))
-    return bot.cur.fetchall()
+    return bot.db.get_row("HEROES", "playerID", player_id)

@@ -3,6 +3,8 @@ import os
 DISCORD_MSG_LIMIT = 2000
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 DEFAULT_PREFIX = "dd."
+DATABASE_PATH = "db/database.db"
+SCHEMA_PATH =  "db/schema.sql"
 COGS = ["setup", "town", "dungeon", "dev"]
 
 UNICODE_DIGITS = ["\U00000031\U000020e3",
@@ -25,7 +27,7 @@ STAGECOACH_REACT_TIME_LIMIT = 30
 
 ADVENTURER_MAX_LEVEL = 6
 
-LEVEL_UP = {"hp": 5,
+LEVEL_UP = {"max_hp": 5,
             "dodge": 5,
             "prot": 5,
             "spd": 5,

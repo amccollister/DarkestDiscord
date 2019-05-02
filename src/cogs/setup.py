@@ -55,30 +55,22 @@ class SetupCog(commands.Cog):
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_town(self, ctx):
-        guild = ctx.guild.id
-        channel = ctx.channel.id
-        self.bot.cur.execute("UPDATE CHANNEL SET townID = {} WHERE guildID = {}".format(channel, guild))
-        self.bot.con.commit()
+        util.set_db_channel(ctx.bot, "town", ctx.channel.id, ctx.guild.id)
         await util.send(ctx, "This is now the town channel.")
 
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_dungeon(self, ctx):
-        guild = ctx.guild.id
-        channel = ctx.channel.id
-        self.bot.cur.execute("UPDATE CHANNEL SET dungeonID = {} WHERE guildID = {}".format(channel, guild))
-        self.bot.con.commit()
+        util.set_db_channel(ctx.bot, "dungeon", ctx.channel.id, ctx.guild.id)
         await util.send(ctx, "This is now the dungeon channel.")
 
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_prefix(self, ctx, arg):
-        guild = ctx.guild.id
         print(arg)
         if any(ch in arg for ch in [" ", "\'", "\""]):
             raise commands.CommandError(message="The prefix cannot have spaces, \', or \".")
-        self.bot.cur.execute("UPDATE CHANNEL SET prefix = '{}' WHERE guildID = {}".format(arg, guild))
-        self.bot.con.commit()
+        ctx.bot.db.update_row("CHANNEL", "prefix = '{}'".format(arg), "guildID = {}".format(ctx.guild.id))
         await util.send(ctx, "The prefix has been set to {}".format(arg))
 
     @commands.command()

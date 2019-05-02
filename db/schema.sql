@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS CHANNEL(
     guildID     INTEGER PRIMARY KEY NOT NULL,
-    townID      INTEGER,
-    dungeonID   INTEGER,
+    townID      INTEGER DEFAULT NULL,
+    dungeonID   INTEGER DEFAULT NULL,
     prefix      TEXT);
 
 
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS ITEM_LIST(
 CREATE TABLE IF NOT EXISTS ADVENTURER_LIST(
     advID           INTEGER PRIMARY KEY NOT NULL,
     name            TEXT NOT NULL UNIQUE,
-    hp              INTEGER NOT NULL,
+    max_hp          INTEGER NOT NULL,
     dodge           INTEGER NOT NULL,
     prot            INTEGER NOT NULL,
     spd             INTEGER NOT NULL,

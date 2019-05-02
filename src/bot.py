@@ -2,10 +2,11 @@ import sys
 import asyncio
 import src.utils as util
 import sqlite3 as sql
-from src.classes.Player import Player
 import src.constants as constants
 
 from discord.ext.commands import Bot
+from src.classes.Player import Player
+from src.classes.SQLHandler import SQLHandler
 from datetime import datetime
 
 # TODO: make classes
@@ -16,11 +17,12 @@ class DarkestBot(Bot):
         self.remove_command('help')  # We will be implementing our own.
 
         # establish sql connection here
-        self.con = sql.connect("db/database.db", isolation_level=None)
-        self.con.row_factory = sql.Row
-        self.cur = self.con.cursor()
-        with open('db/schema.sql') as schema:
-            self.cur.executescript(schema.read())
+        self.db = SQLHandler()
+        #self.con = sql.connect("db/database.db", isolation_level=None)
+        #self.con.row_factory = sql.Row
+        #self.cur = self.con.cursor()
+        #with open('db/schema.sql') as schema:
+        #    self.cur.executescript(schema.read())
 
         # start background tasks (https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py)
         # might not be needed?
@@ -28,7 +30,16 @@ class DarkestBot(Bot):
     def run(self):
         super().run(constants.BOT_TOKEN)
 
+    def sync_servers(self):
+        bot_guilds = [x.id for x in self.guilds]
+        for gid in bot_guilds:
+            columns = ["guildID", "prefix"]
+            values = [gid, constants.DEFAULT_PREFIX]
+            self.db.insert_row("CHANNEL", columns, values)
+
+
     async def on_ready(self):
+        self.sync_servers()
         print("------------")
         print("Logged in as")
         print(self.user.name)

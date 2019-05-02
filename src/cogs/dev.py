@@ -41,7 +41,5 @@ class DevCog(commands.Cog):
         await util.send(ctx, Player(self.bot, ctx.author.id).add_resources(arg1, arg2))
 
 
-
 def setup(bot):
     bot.add_cog(DevCog(bot))
-

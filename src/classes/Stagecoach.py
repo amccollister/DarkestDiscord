@@ -9,40 +9,32 @@ class Stagecoach(object):
     def __init__(self, bot, player):
         self.bot = bot
         self.player = player
-        self.adventurers = self.check_stagecoach(player.info)
+        self.adventurers = self.check_stagecoach()
 
     @staticmethod
     def refresh_stagecoach(bot):
         now = datetime.now()
-        bot.cur.execute("SELECT * FROM STAGECOACH")
-        heroes_before = len(bot.cur.fetchall())
-        bot.cur.execute("UPDATE STAGECOACH SET time = time - 1")
-        bot.cur.execute("DELETE FROM STAGECOACH WHERE time < 1")
-        bot.cur.execute("SELECT * FROM STAGECOACH")
-        heroes_after = len(bot.cur.fetchall())
+        heroes_before = bot.db.get_row_count("STAGECOACH")
+        bot.db.update_rows("STAGECOACH", "time = time - 1")
+        bot.db.delete_rows("STAGECOACH", "time < 1")
+        heroes_after = bot.db.get_row_count("STAGECOACH")
         print("STAGECOACH | UPDATED {} | DELETED {} | TIME {}".format(heroes_before,
                                                                       heroes_before - heroes_after,
                                                                       (datetime.now() - now).microseconds / 10 ** 6))
 
-    def check_stagecoach(self, player_info):
-        self.bot.cur.execute("SELECT * FROM STAGECOACH WHERE playerID = {}".format(player_info["playerID"]))
-        heroes = len(self.bot.cur.fetchall())
-        while heroes < player_info["stagecoach_size"] + constants.STAGECOACH_BASE_SIZE:
-            level = random.randint(0, player_info["stagecoach_level"])
+    def check_stagecoach(self):
+        hero_count = len(self.bot.db.get_rows("STAGECOACH", "playerID", self.player.player_id))
+        hero_cap = self.player.info["stagecoach_size"] + constants.STAGECOACH_BASE_SIZE
+        while hero_count < hero_cap:
+            level = random.randint(0, self.player.info["stagecoach_level"])
             time = random.randint(1, constants.STAGECOACH_TIME_LIMIT)
-            self.add_stagecoach(player_info["playerID"], level, time)
-            heroes += 1
-        return self.get_stagecoach(player_info["playerID"])
+            self.add_stagecoach(level, time)
+            hero_count += 1
+        return self.bot.db.get_rows("STAGECOACH", "playerID", self.player.player_id)
 
-    def add_stagecoach(self, player_id, level, time):
-        self.bot.cur.execute("SELECT * FROM ADVENTURER_LIST")
-        adventurers = self.bot.cur.fetchall()
-        new_adventurer = random.choice(adventurers)
-        insert = [player_id, new_adventurer["advID"], level, time]
-        self.bot.cur.execute("INSERT INTO STAGECOACH (playerID, advID, level, time) VALUES({}, {}, {}, {})".format(*insert))
-        self.bot.con.commit()
-
-    def get_stagecoach(self, player_id):
-        self.bot.cur.execute("SELECT * FROM STAGECOACH WHERE playerID = {}".format(player_id))
-        stagecoach = self.bot.cur.fetchall()
-        return stagecoach
+    def add_stagecoach(self, level, time):
+        adventurer_count = self.bot.db.get_row_count("ADVENTURER_LIST")
+        new_adventurer = random.randint(1, adventurer_count)
+        columns = ["playerID", "advID", "level", "time"]
+        values = [self.player.info["playerID"], new_adventurer, level, time]
+        self.bot.db.insert_row("STAGECOACH", columns, values)

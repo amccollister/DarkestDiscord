@@ -34,15 +34,16 @@ class TownCog(commands.Cog):
     async def shop(self, ctx):
         await util.send(ctx, "You entered the shop!")
 
+    #TODO: fix this
     @commands.command()
     async def stagecoach(self, ctx):
         output = ""
         player = Player(ctx.bot, ctx.author.id)
         stagecoach = player.stagecoach.adventurers
-        react_heroes = {v: k for (k, v) in zip(stagecoach, constants.UNICODE_DIGITS)}
-        for hero in stagecoach:
-            name = util.get_adventurer(ctx.bot, hero["advID"])["name"]
-            output += "Level {} {} | Leaving in {} minute(s)\n".format(hero["level"], name, hero["time"])
+        react = {v: k for (k, v) in zip(stagecoach, constants.UNICODE_DIGITS)}
+        for adv in stagecoach:
+            name = ctx.bot.db.get_row("ADVENTURER_LIST", "advID", adv["advID"])["name"]
+            output += "Level {} {} | Leaving in {} minute(s)\n".format(adv["level"], name, adv["time"])
         msg = await util.send(ctx, output)
         for emote in constants.UNICODE_DIGITS[:len(stagecoach)]:
             await msg.add_reaction(emote)
@@ -53,7 +54,7 @@ class TownCog(commands.Cog):
                                                          check=lambda r, u: u.id == ctx.author.id,
                                                          timeout=constants.STAGECOACH_REACT_TIME_LIMIT)
                 if reaction.emoji in constants.UNICODE_DIGITS[:len(stagecoach)]:
-                    hired = util.hire_adventurer(ctx.bot, ctx.author.id, react_heroes[reaction.emoji])
+                    hired = player.hire_adventurer(react[reaction.emoji])
                     await util.send(ctx, hired)
             except asyncio.TimeoutError:
                 break
@@ -61,7 +62,7 @@ class TownCog(commands.Cog):
     @commands.command()
     async def roster(self, ctx):
         output = ""
-        heroes = util.get_roster(ctx.bot, ctx.author.id)
+        heroes = ctx.bot.db.get_rows("ADVENTURERS", "playerID", ctx.author.id)
         if not heroes:
             output = "You have no heroes in your roster."
         else:
