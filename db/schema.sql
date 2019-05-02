@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS PLAYERS(
     crests              INTEGER NOT NULL DEFAULT 0,
     stagecoach_size     INTEGER NOT NULL DEFAULT 0,
     stagecoach_level    INTEGER NOT NULL DEFAULT 0,
+    roster_level        INTEGER NOT NULL DEFAULT 0,
     blacksmith          INTEGER NOT NULL DEFAULT 0,
     armory              INTEGER NOT NULL DEFAULT 0);
 

@@ -2,7 +2,6 @@ import discord
 import src.utils as util
 from discord.ext import commands
 
-from datetime import datetime
 from src.classes.Player import Player
 
 class DevCog(commands.Cog):

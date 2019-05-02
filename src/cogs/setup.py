@@ -1,4 +1,3 @@
-import src.constants as constants
 import src.utils as util
 from discord.ext import commands
 
@@ -30,26 +29,7 @@ class SetupCog(commands.Cog):
         Gives you help based on the desired plugin or command you specify.
         If no arguments are specified, it displays all available plugins.
         """
-        cogs = ctx.bot.cogs
-        if not arg:
-            text = "__**PLUGINS**__\n"
-            for cog in cogs.keys():
-                text += cog[:-3] + "\n"
-            return await util.send(ctx, text)
-        else:
-            cog = arg[0].lower().capitalize() + "Cog"
-            if cog in cogs:
-                command = [x.name for x in cog.get_commands()]
-                text = "__**{0} Commands**__\n".format(cog[:-3])
-                for c in command:
-                    text += c + "\n"
-                await util.send(ctx, text)
-            else:
-                command = arg[0].lower()
-                if command in [x.name for x in ctx.bot.commands]:
-                    await util.send(ctx, ctx.bot.get_command(command).help)
-                else:
-                    await util.send(ctx, "That plugin does not exist or is not currently installed.")
+        await util.send(ctx, "This will be useful at some point")
 
     @commands.command()
     @commands.check(util.check_guild_owner)

@@ -1,10 +1,9 @@
-import random
 import asyncio
 import src.utils as util
 import src.constants as constants
 
-from datetime import datetime
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
 from src.classes.Player import Player
 from src.classes.Stagecoach import Stagecoach
 
@@ -24,6 +23,7 @@ class TownCog(commands.Cog):
             await asyncio.sleep(60)
 
     async def cog_before_invoke(self, ctx):
+        #TODO: let commands work in DMs
         channel = util.get_db_channel(ctx.bot, "town", ctx.guild.id)
         if not channel:
             raise commands.CommandError(message="You may not use town commands until the channel has been set.")
@@ -35,28 +35,31 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
     @commands.command()
+    @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
-        output = ""
         player = Player(ctx.bot, ctx.author.id)
-        stagecoach = player.stagecoach.adventurers
-        react = {v: k for (k, v) in zip(stagecoach, constants.UNICODE_DIGITS)}
-        for adv in stagecoach:
-            name = ctx.bot.db.get_row("ADVENTURER_LIST", "advID", adv["advID"])["name"]
-            output += "Level {} {} | Leaving in {} minute(s)\n".format(adv["level"], name, adv["time"])
-        msg = await util.send(ctx, output)
-        for emote in constants.UNICODE_DIGITS[:len(stagecoach)]:
-            await msg.add_reaction(emote)
+        adv_list = player.stagecoach.adv_list
+        react = {v: k for (k, v) in zip(adv_list, constants.UNICODE_DIGITS)}
+        output = ["Level {} {} | Leaving in {} minute(s)".format
+                  (adv["level"], player.stagecoach.get_class(adv["advID"]), adv["time"]) for adv in adv_list]
+        msg = await util.react_send(ctx, "\n".join(output), constants.UNICODE_DIGITS[:len(adv_list)])
         while True:
             try:
-                # wait_for takes the parameters for the event. on_reaction_add has two parameters
                 reaction, user = await ctx.bot.wait_for("reaction_add",
-                                                         check=lambda r, u: u.id == ctx.author.id,
-                                                         timeout=constants.STAGECOACH_REACT_TIME_LIMIT)
-                if reaction.emoji in constants.UNICODE_DIGITS[:len(stagecoach)]:
-                    hired = player.hire_adventurer(react[reaction.emoji])
-                    await util.send(ctx, hired)
+                                                        check=lambda r, u: u.id == ctx.author.id,
+                                                        timeout=constants.STAGECOACH_REACT_TIME_LIMIT)
+                if reaction.emoji in react.keys():
+                    adv = react[reaction.emoji]
+                    if player.hire_adventurer(adv):
+                        output[constants.UNICODE_DIGITS.index(reaction.emoji)] = \
+                            "Level {} {} | HIRED".format(adv["level"], player.stagecoach.get_class(adv["advID"]))
+                        await msg.edit(embed=util.make_embed(ctx, "\n".join(output)))
+                        react.pop(reaction.emoji)
+                    else:
+                        await ctx.author.send("You have reached your hero limit.")
             except asyncio.TimeoutError:
                 break
+        await msg.edit(embed=util.make_embed(ctx, "**CLOSED**"))
 
     @commands.command()
     async def roster(self, ctx):

@@ -1,8 +1,6 @@
 import discord
-import random
-import src.constants as constants
+
 from discord.ext import commands
-from src.classes.Player import Player
 
 
 def make_embed(ctx, text, *image):
@@ -21,6 +19,13 @@ def make_embed(ctx, text, *image):
 
 async def send(ctx, text, *image):
     return await ctx.send(embed=make_embed(ctx, text, *image))
+
+
+async def react_send(ctx, text, reactions, *image):
+    msg = await send(ctx, text, *image)
+    for emote in reactions:
+        await msg.add_reaction(emote)
+    return msg
 
 
 def check_guild_owner(ctx):

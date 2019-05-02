@@ -8,6 +8,7 @@ class DungeonCog(commands.Cog):
         self.bot = bot
 
     async def cog_before_invoke(self, ctx):
+        #TODO: do not allow commands to work in DMs
         channel = util.get_db_channel(self.bot, "dungeon", ctx.guild.id)
         if not channel:
             raise commands.CommandError(message="You may not use dungeon commands until the channel has been set.")

@@ -1,13 +1,9 @@
 import sys
-import asyncio
 import src.utils as util
-import sqlite3 as sql
 import src.constants as constants
 
 from discord.ext.commands import Bot
-from src.classes.Player import Player
 from src.classes.SQLHandler import SQLHandler
-from datetime import datetime
 
 class DarkestBot(Bot):
     def __init__(self):
@@ -17,11 +13,6 @@ class DarkestBot(Bot):
 
         # establish sql connection here
         self.db = SQLHandler()
-        #self.con = sql.connect("db/database.db", isolation_level=None)
-        #self.con.row_factory = sql.Row
-        #self.cur = self.con.cursor()
-        #with open('db/schema.sql') as schema:
-        #    self.cur.executescript(schema.read())
 
         # start background tasks (https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py)
         # might not be needed?

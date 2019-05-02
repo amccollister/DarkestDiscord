@@ -9,7 +9,7 @@ class Stagecoach(object):
     def __init__(self, bot, player):
         self.bot = bot
         self.player = player
-        self.adventurers = self.check_stagecoach()
+        self.adv_list = self.check_stagecoach()
 
     @staticmethod
     def refresh_stagecoach(bot):
@@ -34,7 +34,10 @@ class Stagecoach(object):
 
     def add_stagecoach(self, level, time):
         adventurer_count = self.bot.db.get_row_count("ADVENTURER_LIST")
-        new_adventurer = random.randint(1, adventurer_count)
+        new_adventurer = random.randint(1, adventurer_count-1)
         columns = ["playerID", "advID", "level", "time"]
         values = [self.player.info["playerID"], new_adventurer, level, time]
         self.bot.db.insert_row("STAGECOACH", columns, values)
+
+    def get_class(self, adv_id):
+        return self.bot.db.get_row("ADVENTURER_LIST", "advID", adv_id)["name"]
