@@ -2,6 +2,7 @@ import os
 
 DISCORD_MSG_LIMIT = 2000
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
+BOT_VERSION = 0.1
 DEFAULT_PREFIX = "dd."
 DATABASE_PATH = "db/database.db"
 SCHEMA_PATH =  "db/schema.sql"

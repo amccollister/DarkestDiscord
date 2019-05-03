@@ -1,28 +1,30 @@
 import discord
-
+import src.constants as constants
 from discord.ext import commands
 
 
-def make_embed(ctx, text, *image):
+def make_embed(title=None, description=None, fields=None, image=None, thumbnail=None, author=None):
     # https://cog-creators.github.io/discord-embed-sandbox/
     # https://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html#context
-    if len(str(text)) > 1024:
-        text = "Error! The message was too long to deliver."
-    embed = discord.Embed()
-    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-    embed.set_footer(text="Darkest Discord v0.1")
-    embed.add_field(name=ctx.command, value=text, inline=True)
-    if image:
-        embed.set_image(url=image[0])
+    embed_title = title or ""
+    embed_description = description or ""
+    # TODO: dynamic color adjustments
+    embed = discord.Embed(title=str(embed_title), description=str(embed_description), color=0xc40000)
+    embed.set_author(name=author.name, icon_url=author.avatar_url)
+    embed.set_footer(text="Darkest Discord v{}".format(constants.BOT_VERSION))
+    embed.set_image(url=image) if image else None
+    embed.set_thumbnail(url=thumbnail) if thumbnail else None
+    [embed.add_field(name=name, value=value, inline=True) for name, value in fields.items()] if fields else None
     return embed
 
 
-async def send(ctx, text, *image):
-    return await ctx.send(embed=make_embed(ctx, text, *image))
+async def send(ctx, description=None, fields=None, image=None, thumbnail=None, author=None):
+    auth = author or ctx.author
+    return await ctx.send(embed=make_embed(ctx.command, description, fields, image, thumbnail, auth))
 
 
-async def react_send(ctx, text, reactions, *image):
-    msg = await send(ctx, text, *image)
+async def react_send(ctx, description, reactions, fields=None, image=None, thumbnail=None, author=None):
+    msg = await send(ctx, description, fields, image, thumbnail, author)
     for emote in reactions:
         await msg.add_reaction(emote)
     return msg

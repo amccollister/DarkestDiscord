@@ -53,13 +53,15 @@ class TownCog(commands.Cog):
                     if player.hire_adventurer(adv):
                         output[constants.UNICODE_DIGITS.index(reaction.emoji)] = \
                             "Level {} {} | HIRED".format(adv["level"], player.stagecoach.get_class(adv["advID"]))
-                        await msg.edit(embed=util.make_embed(ctx, "\n".join(output)))
+                        print(output)
+                        await msg.edit(embed=util.make_embed(ctx.command, "\n".join(output), author=ctx.author))
+                        print("Message edited")
                         react.pop(reaction.emoji)
                     else:
                         await ctx.author.send("You have reached your hero limit.")
             except asyncio.TimeoutError:
                 break
-        await msg.edit(embed=util.make_embed(ctx, "**CLOSED**"))
+        await msg.edit(embed=util.make_embed(ctx.command, "**CLOSED**", author=ctx.author))
 
     @commands.command()
     async def roster(self, ctx):
