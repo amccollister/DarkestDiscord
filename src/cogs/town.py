@@ -35,13 +35,13 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
     @commands.command()
-    @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
+    #@commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
         player = Player(ctx.bot, ctx.author.id)
         adv_list = player.stagecoach.adv_list
         react = {v: k for (k, v) in zip(adv_list, constants.UNICODE_DIGITS)}
-        output = ["Level {} {} | Leaving in {} minute(s)".format
-                  (adv["level"], player.stagecoach.get_class(adv["advID"]), adv["time"]) for adv in adv_list]
+        output = ["{} Level {} {} | Leaving in {} minute(s)".format
+                  (emoji, adv["level"], player.stagecoach.get_class_name(adv["advID"]), adv["time"]) for emoji, adv in react.items()]
         msg = await util.react_send(ctx, "\n".join(output), constants.UNICODE_DIGITS[:len(adv_list)])
         while True:
             try:
@@ -50,12 +50,10 @@ class TownCog(commands.Cog):
                                                         timeout=constants.STAGECOACH_REACT_TIME_LIMIT)
                 if reaction.emoji in react.keys():
                     adv = react[reaction.emoji]
-                    if player.hire_adventurer(adv):
+                    if player.stagecoach.hire(adv):
                         output[constants.UNICODE_DIGITS.index(reaction.emoji)] = \
-                            "Level {} {} | HIRED".format(adv["level"], player.stagecoach.get_class(adv["advID"]))
-                        print(output)
+                            "{} Level {} {} | HIRED".format(reaction.emoji, adv["level"], player.stagecoach.get_class_name(adv["advID"]))
                         await msg.edit(embed=util.make_embed(ctx.command, "\n".join(output), author=ctx.author))
-                        print("Message edited")
                         react.pop(reaction.emoji)
                     else:
                         await ctx.author.send("You have reached your hero limit.")
@@ -68,8 +66,9 @@ class TownCog(commands.Cog):
         heroes = ctx.bot.db.get_rows("ADVENTURERS", "playerID", ctx.author.id)
         if not heroes:
             return await util.send(ctx, "You have no heroes in your roster.")
-        output = ["Level {} {} | Status: {}".format(hero["level"], hero["character_name"], hero["status"]) for hero in heroes]
-        await util.send(ctx, "\n".join(output))
+        output = [["Level {} {} ".format(hero["level"], hero["character_name"]),
+                   "HP: {}\nStress: {}\nStatus: {}".format(hero["hp"], hero["stress"], hero["status"])] for hero in heroes]
+        await util.send(ctx, fields=output)
 
     @commands.command()
     async def profile(self, ctx):

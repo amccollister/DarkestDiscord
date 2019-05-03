@@ -19,20 +19,12 @@ class Player(object):
     def get_roster_cap(self):
         return constants.ADVENTURER_BASE_CAPACITY + self.info["roster_level"]
 
-    def hire_adventurer(self, stagecoach_hire):
-        stagecoach_id = stagecoach_hire["stagecoachID"]
-        adv_id = stagecoach_hire["advID"]
-        if len(self.bot.db.get_rows("ADVENTURERS", "playerID", self.player_id)) >= self.get_roster_cap():
-            return False
-        self.bot.db.delete_rows("STAGECOACH", "stagecoachID = {}".format(stagecoach_id))
-        name = self.stagecoach.get_class(adv_id)
-        columns = ["advID", "playerID", "level", "character_name"]
-        values = [adv_id, self.player_id, stagecoach_hire["level"], name]
-        self.bot.db.insert_row("ADVENTURERS", columns, values)
-        return True
-
     def level_up(self, column):
-        pass
+        self.bot.db.update_row("PLAYERS", "{0} = {0} + 1".format(column), "playerID = {}"
+                               .format(self.player_id))
+        return "Increased {} by 1".format(column)
 
     def add_resources(self, column, amount):
-        pass
+        self.bot.db.update_row("PLAYERS", "{0} = {0} + {1}".format(column, amount), "playerID = {}"
+                               .format(self.player_id))
+        return "Increased {} by {}".format(column, amount)

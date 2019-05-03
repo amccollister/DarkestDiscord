@@ -39,6 +39,11 @@ class DevCog(commands.Cog):
     async def level(self, ctx, arg1, arg2):
         await util.send(ctx, Player(self.bot, ctx.author.id).add_resources(arg1, arg2))
 
+    @commands.command()
+    async def clear_heroes(self, ctx):
+        ctx.bot.db.delete_rows("ADVENTURERS", "playerID = {}".format(ctx.author.id))
+        await util.send(ctx, "Heroes cleared!")
+
 
 def setup(bot):
     bot.add_cog(DevCog(bot))

@@ -14,7 +14,7 @@ def make_embed(title=None, description=None, fields=None, image=None, thumbnail=
     embed.set_footer(text="Darkest Discord v{}".format(constants.BOT_VERSION))
     embed.set_image(url=image) if image else None
     embed.set_thumbnail(url=thumbnail) if thumbnail else None
-    [embed.add_field(name=name, value=value, inline=True) for name, value in fields.items()] if fields else None
+    [embed.add_field(name=field[0], value=field[1], inline=True) for field in fields] if fields else None
     return embed
 
 

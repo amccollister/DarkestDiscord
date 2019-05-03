@@ -40,4 +40,20 @@ class Stagecoach(object):
         self.bot.db.insert_row("STAGECOACH", columns, values)
 
     def get_class(self, adv_id):
+        return self.bot.db.get_row("ADVENTURER_LIST", "advID", adv_id)
+
+    def get_class_name(self, adv_id):
         return self.bot.db.get_row("ADVENTURER_LIST", "advID", adv_id)["name"]
+
+    def hire(self, stagecoach_hire):
+        stagecoach_id = stagecoach_hire["stagecoachID"]
+        adv_id = stagecoach_hire["advID"]
+        if len(self.bot.db.get_rows("ADVENTURERS", "playerID", self.player.player_id)) >= self.player.get_roster_cap():
+            return False
+        self.bot.db.delete_rows("STAGECOACH", "stagecoachID = {}".format(stagecoach_id))
+        adv_class = self.get_class(adv_id)
+        hp = adv_class["max_hp"] + stagecoach_hire["level"]*constants.LEVEL_UP["max_hp"]
+        columns = ["advID", "playerID", "level", "hp", "character_name"]
+        values = [adv_id, self.player.player_id, stagecoach_hire["level"], hp, adv_class["name"]]
+        self.bot.db.insert_row("ADVENTURERS", columns, values)
+        return True
