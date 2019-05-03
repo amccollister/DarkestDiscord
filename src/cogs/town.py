@@ -63,6 +63,7 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def roster(self, ctx):
+        # TODO: hero info and fire hero
         heroes = ctx.bot.db.get_rows("ADVENTURERS", "playerID", ctx.author.id)
         if not heroes:
             return await util.send(ctx, "You have no heroes in your roster.")
@@ -72,8 +73,11 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def profile(self, ctx):
-        #TODO: profile command
-        await util.send(ctx, "This will display your profile information.")
+        row = Player(ctx.bot, ctx.author.id).info
+        profile = [[key, row[key]] for key in row.keys()]
+        profile.pop(0)
+        await util.send(ctx, fields=profile, thumbnail=ctx.author.avatar_url)
+
 
 def setup(bot):
     bot.add_cog(TownCog(bot))

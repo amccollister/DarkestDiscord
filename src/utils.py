@@ -4,14 +4,14 @@ from discord.ext import commands
 
 
 def make_embed(title=None, description=None, fields=None, image=None, thumbnail=None, author=None):
-    # https://cog-creators.github.io/discord-embed-sandbox/
-    # https://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html#context
+    # https://discordpy.readthedocs.io/en/rewrite/api.html#discord.Embed
+    # https://discordpy.readthedocs.io/en/latest/faq.html#how-do-i-use-a-local-image-file-for-an-embed-image
     embed_title = title or ""
     embed_description = description or ""
     # TODO: dynamic color adjustments
     embed = discord.Embed(title=str(embed_title), description=str(embed_description), color=0xc40000)
     embed.set_author(name=author.name, icon_url=author.avatar_url)
-    embed.set_footer(text="Darkest Discord v{}".format(constants.BOT_VERSION))
+    embed.set_footer(text="Darkest Discord v{}".format(constants.BOT_VERSION), icon_url=constants.BOT_AVATAR)
     embed.set_image(url=image) if image else None
     embed.set_thumbnail(url=thumbnail) if thumbnail else None
     [embed.add_field(name=field[0], value=field[1], inline=True) for field in fields] if fields else None
@@ -20,6 +20,7 @@ def make_embed(title=None, description=None, fields=None, image=None, thumbnail=
 
 async def send(ctx, description=None, fields=None, image=None, thumbnail=None, author=None):
     auth = author or ctx.author
+    icon = ctx.bot.user.avatar_url
     return await ctx.send(embed=make_embed(ctx.command, description, fields, image, thumbnail, auth))
 
 

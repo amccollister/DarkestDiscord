@@ -28,12 +28,13 @@ class DarkestBot(Bot):
             self.db.insert_row("CHANNEL", columns, values)
 
     async def on_ready(self):
-        self.sync_servers()
         print("------------")
         print("Logged in as")
         print(self.user.name)
         print(self.user.id)
         print("------------")
+        constants.BOT_AVATAR = self.user.avatar_url  # set the avatar for embeds
+        self.sync_servers()
 
     async def on_guild_join(self):
         #TODO: add the server and dm the owner
