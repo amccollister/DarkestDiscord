@@ -35,7 +35,7 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
     @commands.command()
-    #@commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
+    @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
         player = Player(ctx.bot, ctx.author.id)
         adv_list = player.stagecoach.adv_list
@@ -58,18 +58,20 @@ class TownCog(commands.Cog):
                     else:
                         await ctx.author.send("You have reached your hero limit.")
             except asyncio.TimeoutError:
+                await msg.edit(embed=util.make_embed(ctx.command, "**CLOSED**", author=ctx.author))
                 break
-        await msg.edit(embed=util.make_embed(ctx.command, "**CLOSED**", author=ctx.author))
+
 
     @commands.command()
     async def roster(self, ctx):
-        # TODO: hero info and fire hero
-        heroes = ctx.bot.db.get_rows("ADVENTURERS", "playerID", ctx.author.id)
-        if not heroes:
+        # TODO: hero info and fire hero and back button
+        player = Player(ctx.bot, ctx.author.id)
+        if not player.roster:
             return await util.send(ctx, "You have no heroes in your roster.")
-        output = [["Level {} {} ".format(hero["level"], hero["character_name"]),
-                   "HP: {}\nStress: {}\nStatus: {}".format(hero["hp"], hero["stress"], hero["status"])] for hero in heroes]
-        await util.send(ctx, fields=output)
+        output = [["Level {} {} ".format(hero.info["level"], hero.info["character_name"]),
+                   "HP: {}\nStress: {}\nStatus: {}".format(hero.info["hp"], hero.info["stress"], hero.info["status"])]
+                  for hero in player.roster]
+        await util.send(ctx, fields=output, thumbnail=ctx.author.avatar_url)
 
     @commands.command()
     async def profile(self, ctx):
