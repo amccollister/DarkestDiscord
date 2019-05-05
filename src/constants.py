@@ -4,7 +4,7 @@ import os
 BOT_AVATAR = None
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 BOT_VERSION = 0.1
-GITHUB_URL = "https://github.com/amccollister/DarkestDiscord"
+GITHUB_URL = "https://github.com/amccollister/DarkestDiscord/tree/dev"
 DEFAULT_PREFIX = "dd."
 DATABASE_PATH = "db/database.db"
 SCHEMA_PATH = "db/schema.sql"
