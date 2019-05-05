@@ -35,25 +35,38 @@ class Stagecoach(object):
     def add_stagecoach(self, level, time):
         adventurer_count = self.bot.db.get_row_count("ADVENTURER_LIST")
         new_adventurer = random.randint(1, adventurer_count-1)
-        columns = ["playerID", "advID", "level", "time"]
-        values = [self.player.info["playerID"], new_adventurer, level, time]
+        name = "Dismas"
+        columns = ["playerID", "advID", "level", "time", "name"]
+        values = [self.player.info["playerID"], new_adventurer, level, time, name]
         self.bot.db.insert_row("STAGECOACH", columns, values)
 
-    def get_class(self, adv_id):
+    def get_class_row(self, adv_id):
         return self.bot.db.get_row("ADVENTURER_LIST", "advID", adv_id)
 
     def get_class_name(self, adv_id):
-        return self.bot.db.get_row("ADVENTURER_LIST", "advID", adv_id)["name"]
+        return self.bot.db.get_row("ADVENTURER_LIST", "advID", adv_id)["class"]
 
     def hire(self, stagecoach_hire):
-        stagecoach_id = stagecoach_hire["stagecoachID"]
-        adv_id = stagecoach_hire["advID"]
         if len(self.bot.db.get_rows("ADVENTURERS", "playerID", self.player.player_id)) >= self.player.get_roster_cap():
             return False
+        stagecoach_id = stagecoach_hire["stagecoachID"]
+        adv_id = stagecoach_hire["advID"]
         self.bot.db.delete_rows("STAGECOACH", "stagecoachID = {}".format(stagecoach_id))
-        adv_class = self.get_class(adv_id)
+        adv_class = self.get_class_row(adv_id)
         hp = adv_class["max_hp"] + stagecoach_hire["level"]*constants.LEVEL_UP["max_hp"]
-        columns = ["advID", "playerID", "level", "hp", "character_name"]
-        values = [adv_id, self.player.player_id, stagecoach_hire["level"], hp, adv_class["name"]]
+        columns = ["advID", "playerID", "level", "hp", "name"]
+        values = [adv_id, self.player.player_id, stagecoach_hire["level"], hp, stagecoach_hire["name"]]
         self.bot.db.insert_row("ADVENTURERS", columns, values)
         return True
+
+    def check_adv_hired(self, stagecoach_id):
+        return not self.bot.db.get_row("STAGECOACH", "stagecoachID", stagecoach_id)
+
+    def get_stagecoach_output(self):
+        output = []
+        for adv in self.adv_list:
+            field_name = "{} {}".format(constants.UNICODE_DIGITS[self.adv_list.index(adv)], adv["name"])
+            field_value = "Level {} {}\n".format(adv["level"], self.get_class_name(adv["advID"]))
+            field_value += "HIRED" if self.check_adv_hired(adv["stagecoachID"]) else "Leaving in {} minute(s)".format(adv["time"])
+            output.append([field_name, field_value])
+        return output

@@ -31,14 +31,16 @@ STAGECOACH_COOLDOWN = 600
 ADVENTURER_BASE_CAPACITY = 2
 ADVENTURER_MAX_LEVEL = 6
 
+ROSTER_TIME_LIMIT = 600
+
 LEVEL_UP = {"max_hp": 5,
             "dodge": 5,
-            "prot": 5,
-            "spd": 5,
-            "acc": 5,
-            "crit": 5,
-            "dmg_lower": 5,
-            "dmg_upper": 5,
+            "prot": 0,
+            "spd": 1,
+            "acc": 0,
+            "crit": 1,
+            "dmg_lower": 1,
+            "dmg_upper": 2,
             "stun_res": 10,
             "blight_res": 10,
             "disease_res": 10,

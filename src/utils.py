@@ -24,7 +24,7 @@ async def send(ctx, description=None, fields=None, image=None, thumbnail=None, a
     return await ctx.send(embed=make_embed(ctx.command, description, fields, image, thumbnail, auth))
 
 
-async def react_send(ctx, description, reactions, fields=None, image=None, thumbnail=None, author=None):
+async def react_send(ctx, reactions, description=None, fields=None, image=None, thumbnail=None, author=None):
     msg = await send(ctx, description, fields, image, thumbnail, author)
     for emote in reactions:
         await msg.add_reaction(emote)
@@ -36,6 +36,10 @@ def check_guild_owner(ctx):
     if not check:
         raise commands.CheckFailure(message="You must be the guild owner to use this command.")
     return check
+
+
+def generate_react_list(values):
+    return {v: k for (k, v) in zip(values, constants.UNICODE_DIGITS)}
 
 
 ### DB commands ###

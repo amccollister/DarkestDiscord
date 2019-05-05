@@ -16,6 +16,7 @@ class DarkestBot(Bot):
 
         # start background tasks (https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py)
         # might not be needed?
+        # TODO: db backup
 
     def run(self):
         super().run(constants.BOT_TOKEN)

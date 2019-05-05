@@ -35,14 +35,13 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
     @commands.command()
-    @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
+    #@commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
+        # Todo: make this better. Put the complex stuff in Stagecoach object
         player = Player(ctx.bot, ctx.author.id)
         adv_list = player.stagecoach.adv_list
-        react = {v: k for (k, v) in zip(adv_list, constants.UNICODE_DIGITS)}
-        output = ["{} Level {} {} | Leaving in {} minute(s)".format
-                  (emoji, adv["level"], player.stagecoach.get_class_name(adv["advID"]), adv["time"]) for emoji, adv in react.items()]
-        msg = await util.react_send(ctx, "\n".join(output), constants.UNICODE_DIGITS[:len(adv_list)])
+        react = util.generate_react_list(adv_list)
+        msg = await util.react_send(ctx, react.keys(), fields=player.stagecoach.get_stagecoach_output())
         while True:
             try:
                 reaction, user = await ctx.bot.wait_for("reaction_add",
@@ -51,9 +50,7 @@ class TownCog(commands.Cog):
                 if reaction.emoji in react.keys():
                     adv = react[reaction.emoji]
                     if player.stagecoach.hire(adv):
-                        output[constants.UNICODE_DIGITS.index(reaction.emoji)] = \
-                            "{} Level {} {} | HIRED".format(reaction.emoji, adv["level"], player.stagecoach.get_class_name(adv["advID"]))
-                        await msg.edit(embed=util.make_embed(ctx.command, "\n".join(output), author=ctx.author))
+                        await msg.edit(embed=util.make_embed(ctx.command, fields=player.stagecoach.get_stagecoach_output(), author=ctx.author))
                         react.pop(reaction.emoji)
                     else:
                         await ctx.author.send("You have reached your hero limit.")
@@ -68,11 +65,21 @@ class TownCog(commands.Cog):
         player = Player(ctx.bot, ctx.author.id)
         if not player.roster:
             return await util.send(ctx, "You have no heroes in your roster.")
-        output = [["Level {} {} ".format(hero.info["level"], hero.info["character_name"]),
-                   "HP: {}\nStress: {}\nStatus: {}".format(hero.info["hp"], hero.info["stress"], hero.info["status"])]
-                  for hero in player.roster]
-        await util.send(ctx, fields=output, thumbnail=ctx.author.avatar_url)
-
+        output = [hero.get_basic_info(index) for index, hero in enumerate(player.roster)]
+        react = util.generate_react_list(player.roster)
+        msg = await util.react_send(ctx, react, fields=output, thumbnail=ctx.author.avatar_url)
+        #while True:
+        #    try:
+        #        reaction, user = await ctx.bot.wait_for("reaction_add",
+        #                                                check=lambda r, u: u.id == ctx.author.id,
+        #                                                timeout=constants.ROSTER_REACT_TIME_LIMIT)
+        #        if reaction.emoji in react.keys():
+        #            #display the hero information. Add back and fire button.
+        #    except asyncio.TimeoutError:
+        #        output = [hero.get_basic_info(index) for index, hero in enumerate(player.roster)]
+        #        await msg.edit(embed=util.make_embed(ctx.command, fields=output, author=ctx.author))
+        #        break
+#
     @commands.command()
     async def profile(self, ctx):
         row = Player(ctx.bot, ctx.author.id).info

@@ -12,11 +12,18 @@ class Adventurer(object):
         return self.bot.db.get_row("ADVENTURERS", "heroID", self.hero_id)
 
     def get_stats(self):
-        stats = {}
         base = self.bot.db.get_row("ADVENTURER_LIST", "advID", self.info["advID"])
+        stats = {k: base[k] for k in base.keys()}
         for k, v in constants.LEVEL_UP.items():
             stats[k] = (v * self.info["level"]) + base[k]
         return stats
+
+    def get_basic_info(self, index):
+        emoji = constants.UNICODE_DIGITS[index]
+        field_name = "{}\nLevel {} {}".format(self.info["name"], self.info["level"], self.stats["class"])
+        field_value = "{}\nHP: {}/{}\nStress: {}/200\nPress {} for stats".format(self.info["status"], self.info["hp"], self.stats["max_hp"], self.info["stress"], emoji)
+        return [field_name, field_value]
+
 
     def add_exp(self):
         pass
