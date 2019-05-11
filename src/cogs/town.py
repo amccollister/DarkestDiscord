@@ -36,7 +36,7 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
     @commands.command()
-    #@commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
+    @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
         # TODO: make this better. Put the complex stuff in Stagecoach object
         player = Player(ctx.bot, ctx.author.id)

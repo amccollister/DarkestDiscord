@@ -81,6 +81,11 @@ CREATE TABLE IF NOT EXISTS PLAYERS(
     blacksmith_level    INTEGER NOT NULL DEFAULT 0,
     armory_level        INTEGER NOT NULL DEFAULT 0);
 
+-- town base costs
+-- town scaling costs
+-- armor/weapon/skill/shop gold costs...? bleh
+-- nomad wagon allows you to purchase trinkets!
+
 
 CREATE TABLE IF NOT EXISTS ADVENTURERS(
     heroID INTEGER PRIMARY KEY NOT NULL,

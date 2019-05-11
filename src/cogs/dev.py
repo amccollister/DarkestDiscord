@@ -4,6 +4,7 @@ from discord.ext import commands
 
 from src.classes.Player import Player
 
+
 class DevCog(commands.Cog):
     def __init__(self, bot):
         # grab bot attributes
