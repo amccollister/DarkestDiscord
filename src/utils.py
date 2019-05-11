@@ -10,17 +10,18 @@ def make_embed(title=None, description=None, fields=None, image=None, thumbnail=
     embed_description = description or ""
     # TODO: dynamic color adjustments
     embed = discord.Embed(title=str(embed_title), description=str(embed_description), color=0xc40000)
-    embed.set_author(name=author.name, icon_url=author.avatar_url)
     embed.set_footer(text="Darkest Discord v{}".format(constants.BOT_VERSION), icon_url=constants.BOT_AVATAR)
+    embed.set_author(name=author.name, icon_url=author.avatar_url) if author else None
     embed.set_image(url=image) if image else None
     embed.set_thumbnail(url=thumbnail) if thumbnail else None
     [embed.add_field(name=field[0], value=field[1], inline=True) for field in fields] if fields else None
     return embed
 
 
-async def send(ctx, description=None, fields=None, image=None, thumbnail=None, author=None):
+async def send(ctx, description=None, fields=None, image=None, thumbnail=None, author=None, dm=None):
     auth = author or ctx.author
-    icon = ctx.bot.user.avatar_url
+    if dm:
+        return await ctx.author.send(embed=make_embed(ctx.command, description, fields, image, thumbnail, auth))
     return await ctx.send(embed=make_embed(ctx.command, description, fields, image, thumbnail, auth))
 
 
@@ -45,6 +46,8 @@ def generate_react_list(values):
 ### DB commands ###
 
 def get_pre(bot, message):
+    if not message.guild:
+        return constants.DEFAULT_PREFIX
     row = bot.db.get_row("CHANNEL", "guildID", message.guild.id)
     return row["prefix"]
 

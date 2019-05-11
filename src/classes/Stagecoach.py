@@ -46,19 +46,6 @@ class Stagecoach(object):
     def get_class_name(self, adv_id):
         return self.bot.db.get_row("ADVENTURER_LIST", "advID", adv_id)["class"]
 
-    def hire(self, stagecoach_hire):
-        if len(self.bot.db.get_rows("ADVENTURERS", "playerID", self.player.player_id)) >= self.player.get_roster_cap():
-            return False
-        stagecoach_id = stagecoach_hire["stagecoachID"]
-        adv_id = stagecoach_hire["advID"]
-        self.bot.db.delete_rows("STAGECOACH", "stagecoachID = {}".format(stagecoach_id))
-        adv_class = self.get_class_row(adv_id)
-        hp = adv_class["max_hp"] + stagecoach_hire["level"]*constants.LEVEL_UP["max_hp"]
-        columns = ["advID", "playerID", "level", "hp", "name"]
-        values = [adv_id, self.player.player_id, stagecoach_hire["level"], hp, stagecoach_hire["name"]]
-        self.bot.db.insert_row("ADVENTURERS", columns, values)
-        return True
-
     def check_adv_hired(self, stagecoach_id):
         return not self.bot.db.get_row("STAGECOACH", "stagecoachID", stagecoach_id)
 

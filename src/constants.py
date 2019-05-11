@@ -21,6 +21,14 @@ UNICODE_DIGITS = ["\U00000031\U000020e3",
                   "\U00000039\U000020e3",
                   "\U00000030\U000020e3"]
 
+UNICODE_DIRECTIONAL = {"UP":        "\U0001f53c",
+                       "DOWN":      "\U0001f53d",
+                       "LEFT":      "\U000025c0",
+                       "RIGHT":     "\U000025b6",
+                       "RETURN":    "\U000021a9",
+                       "CANCEL":    "\U0001f6ab",
+                       "FIRE":      "\U0001f525"}
+
 # --BASE VALUES-- #
 
 STAGECOACH_BASE_SIZE = 3
@@ -31,7 +39,7 @@ STAGECOACH_COOLDOWN = 600
 ADVENTURER_BASE_CAPACITY = 2
 ADVENTURER_MAX_LEVEL = 6
 
-ROSTER_TIME_LIMIT = 600
+ROSTER_REACT_TIME_LIMIT = 600
 
 LEVEL_UP = {"max_hp": 5,
             "dodge": 5,

@@ -2,8 +2,6 @@ import src.constants as constants
 from src.classes.Stagecoach import Stagecoach
 from src.classes.Adventurer import Adventurer
 # TODO: set info variable as the info and update the variable when anything changes
-# TODO: use this class to add a player if they don't exist (dingus)
-# TODO: store the stagecoach and roster in the player class
 
 
 class Player(object):
@@ -23,7 +21,7 @@ class Player(object):
 
     def get_roster(self):
         heroes = self.bot.db.get_rows("ADVENTURERS", "playerID", self.player_id)
-        return [Adventurer(self.bot, hero["heroID"]) for hero in heroes]
+        return [Adventurer(self.bot, hero["heroID"], self.player_id) for hero in heroes]
 
     def get_roster_cap(self):
         return constants.ADVENTURER_BASE_CAPACITY + self.info["roster_level"]
@@ -42,3 +40,23 @@ class Player(object):
                                .format(self.player_id))
         self.update_info()
         return "Increased {} by {}".format(column, amount)
+
+    def hire(self, stagecoach_hire):
+        if len(self.bot.db.get_rows("ADVENTURERS", "playerID", self.player_id)) >= self.get_roster_cap():
+            return False
+        stagecoach_id = stagecoach_hire["stagecoachID"]
+        adv_id = stagecoach_hire["advID"]
+        self.bot.db.delete_rows("STAGECOACH", "stagecoachID = {}".format(stagecoach_id))
+        adv_class = self.stagecoach.get_class_row(adv_id)
+        hp = adv_class["max_hp"] + stagecoach_hire["level"] * constants.LEVEL_UP["max_hp"]
+        columns = ["advID", "playerID", "level", "hp", "name"]
+        values = [adv_id, self.player_id, stagecoach_hire["level"], hp, stagecoach_hire["name"]]
+        self.bot.db.insert_row("ADVENTURERS", columns, values)
+        return True
+
+    def fire(self, fired_hero):
+        if not fired_hero.get_adventurer_info():
+            return False
+        self.bot.db.delete_rows("ADVENTURERS", "heroID = {}".format(fired_hero.info["heroID"]))
+        self.update_info()
+        return True
