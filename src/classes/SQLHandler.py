@@ -44,7 +44,7 @@ class SQLHandler(object):
 
     def get_row_count(self, table):
         self.cur.execute("SELECT * FROM {}".format(table))
-        return len(self.cur.fetchone())
+        return len(self.cur.fetchall())
 
     def delete_rows(self, table, conditional):
         self.cur.execute("DELETE FROM {} WHERE {}".format(table, conditional))

@@ -36,18 +36,15 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
     @commands.command()
-    @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
+    #@commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
-        # TODO: make this better. Put the complex stuff in Stagecoach object
         player = Player(ctx.bot, ctx.author.id)
         adv_list = player.stagecoach.adv_list
         react = util.generate_react_list(adv_list)
         msg = await util.react_send(ctx, react.keys(), fields=player.stagecoach.get_stagecoach_output())
         while True:
             try:
-                reaction, user = await ctx.bot.wait_for("reaction_add",
-                                                        check=lambda r, u: u.id == ctx.author.id and r.message.id == msg.id,
-                                                        timeout=constants.STAGECOACH_REACT_TIME_LIMIT)
+                reaction, user = await util.wait_for_react_change(ctx, msg, constants.STAGECOACH_REACT_TIME_LIMIT)
                 if reaction.emoji in react.keys():
                     adv = react[reaction.emoji]
                     if player.hire(adv):
@@ -71,9 +68,7 @@ class TownCog(commands.Cog):
         msg = await util.react_send(ctx, react.keys(), fields=output, thumbnail=ctx.author.avatar_url)
         while True:
             try:
-                reaction, user = await ctx.bot.wait_for("reaction_add",
-                                                        check=lambda r, u: u.id == ctx.author.id and r.message.id == msg.id,
-                                                        timeout=constants.ROSTER_REACT_TIME_LIMIT)
+                reaction, user = await util.wait_for_react_change(ctx, msg, constants.ROSTER_REACT_TIME_LIMIT)
                 if default_state and reaction.emoji in react.keys():
                     default_state = False
                     selected_hero = react[reaction.emoji]
@@ -114,6 +109,11 @@ class TownCog(commands.Cog):
         profile.pop(0)
         await util.send(ctx, fields=profile, thumbnail=ctx.author.avatar_url)
 
+    @commands.command()
+    async def upgrade(self, ctx):
+        #Choose which building to upgrade: Blacksmith, Guild, Nomad Wagon, Sanitarium, Stagecoach, Survivalist Camp
+        player = Player(ctx.bot, ctx.author.id)
+        await util.send(ctx, "Upgrade menu will display here")
 
 def setup(bot):
     bot.add_cog(TownCog(bot))

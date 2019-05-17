@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS ITEM_LIST(
     itemID      INTEGER PRIMARY KEY NOT NULL,
     name        TEXT UNIQUE NOT NULL,
     cost        INTEGER NOT NULL);
-
+-- armor/weapon/skill/shop gold costs
 
 CREATE TABLE IF NOT EXISTS ADVENTURER_LIST(
     advID           INTEGER PRIMARY KEY NOT NULL,
@@ -69,22 +69,67 @@ INSERT OR IGNORE INTO ADVENTURER_LIST VALUES(17, "Vestal", 24, 0, 0, 4, 0, 1, 4,
 
 
 CREATE TABLE IF NOT EXISTS PLAYERS(
-    playerID            INTEGER PRIMARY KEY NOT NULL,
-    gold                INTEGER NOT NULL DEFAULT 0,
-    busts               INTEGER NOT NULL DEFAULT 0,
-    portraits           INTEGER NOT NULL DEFAULT 0,
-    deeds               INTEGER NOT NULL DEFAULT 0,
-    crests              INTEGER NOT NULL DEFAULT 0,
-    stagecoach_size     INTEGER NOT NULL DEFAULT 0,
-    stagecoach_level    INTEGER NOT NULL DEFAULT 0,
-    roster_level        INTEGER NOT NULL DEFAULT 0,
-    blacksmith_level    INTEGER NOT NULL DEFAULT 0,
-    armory_level        INTEGER NOT NULL DEFAULT 0);
+    playerID                    INTEGER PRIMARY KEY NOT NULL,
+    gold                        INTEGER NOT NULL DEFAULT 0,
+    busts                       INTEGER NOT NULL DEFAULT 0,
+    portraits                   INTEGER NOT NULL DEFAULT 0,
+    deeds                       INTEGER NOT NULL DEFAULT 0,
+    crests                      INTEGER NOT NULL DEFAULT 0,
+    blacksmith_weapon_level     INTEGER NOT NULL DEFAULT 0,
+    blacksmith_armor_level      INTEGER NOT NULL DEFAULT 0,
+    blacksmith_discount_level   INTEGER NOT NULL DEFAULT 0,
+    guild_skill_level_cap       INTEGER NOT NULL DEFAULT 0,
+    guild_discount_level        INTEGER NOT NULL DEFAULT 0,
+    nomad_trinket_count         INTEGER NOT NULL DEFAULT 0,
+    nomad_discount_level        INTEGER NOT NULL DEFAULT 0,
+    sanitarium_discount_level   INTEGER NOT NULL DEFAULT 0,
+    stagecoach_size             INTEGER NOT NULL DEFAULT 0,
+    stagecoach_level_cap        INTEGER NOT NULL DEFAULT 0,
+    roster_size_level           INTEGER NOT NULL DEFAULT 0,
+    survivalist_discount_level  INTEGER NOT NULL DEFAULT 0);
 
--- town base costs
--- town scaling costs
--- armor/weapon/skill/shop gold costs...? bleh
--- nomad wagon allows you to purchase trinkets!
+
+
+CREATE TABLE IF NOT EXISTS TOWN_BASE_COST(
+    name                TEXT NOT NULL,
+    busts               INTEGER NOT NULL,
+    portraits           INTEGER NOT NULL,
+    deeds               INTEGER NOT NULL,
+    crests              INTEGER NOT NULL);
+
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("blacksmith_weapon_level", 0, 0, 8, 8);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("blacksmith_armor_level", 0, 0, 8, 8);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("blacksmith_discount_level", 0, 0, 4, 4);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("guild_skill_level_cap", 0, 6, 0, 14);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("guild_discount_level", 0, 2, 0, 6);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("nomad_trinket_count", 0, 0, 0, 10);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("nomad_discount_level", 0, 0, 0, 8);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("sanitarium_discount_level", 5, 0, 0, 5);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("stagecoach_size", 0, 0, 3, 4);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("stagecoach_level_cap", 9, 0, 0, 12);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("roster_size_level", 0, 0, 3, 4);
+INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("survivalist_discount_level", 0, 0, 0, 15);
+
+
+CREATE TABLE IF NOT EXISTS TOWN_UPGRADE_COST(
+    name                TEXT NOT NULL,
+    busts               INTEGER NOT NULL,
+    portraits           INTEGER NOT NULL,
+    deeds               INTEGER NOT NULL,
+    crests              INTEGER NOT NULL);
+
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("blacksmith_weapon_level", 0, 0, 12, 12);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("blacksmith_armor_level", 0, 0, 12, 12);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("blacksmith_discount_level", 0, 0, 5, 6);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("guild_skill_level_cap", 0, 10, 0, 15);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("guild_discount_level", 0, 3, 0, 10);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("nomad_trinket_count", 0, 0, 0, 16);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("nomad_discount_level", 0, 0, 0, 16);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("sanitarium_discount_level", 5, 0, 0, 5);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("stagecoach_size", 0, 0, 5, 6);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("stagecoach_level_cap", 3, 0, 0, 4);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("roster_size_level", 0, 0, 5, 6);
+INSERT OR IGNORE INTO TOWN_UPGRADE_COST VALUES("survivalist_discount_level", 0, 0, 0, 20);
 
 
 CREATE TABLE IF NOT EXISTS ADVENTURERS(
@@ -101,7 +146,6 @@ CREATE TABLE IF NOT EXISTS ADVENTURERS(
     status TEXT NOT NULL DEFAULT 'ALIVE',
     FOREIGN KEY(advID) REFERENCES ADVENTURER_LIST(advID),
     FOREIGN KEY(playerID) REFERENCES PLAYERS(playerID));
-
 
 
 CREATE TABLE IF NOT EXISTS STAGECOACH(

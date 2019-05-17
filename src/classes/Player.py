@@ -24,7 +24,7 @@ class Player(object):
         return [Adventurer(self.bot, hero["heroID"], self.player_id) for hero in heroes]
 
     def get_roster_cap(self):
-        return constants.ADVENTURER_BASE_CAPACITY + self.info["roster_level"]
+        return constants.ADVENTURER_BASE_CAPACITY + self.info["roster_size_level"]
 
     def get_adventurer(self):
         pass
@@ -35,7 +35,7 @@ class Player(object):
         self.update_info()
         return "Increased {} by 1".format(column)
 
-    def add_resources(self, column, amount):
+    def add_resource(self, column, amount):
         self.bot.db.update_row("PLAYERS", "{0} = {0} + {1}".format(column, amount), "playerID = {}"
                                .format(self.player_id))
         self.update_info()

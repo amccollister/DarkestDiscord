@@ -4,7 +4,7 @@ import os
 BOT_AVATAR = None
 BOT_TOKEN = os.getenv("DISCORD_TOKEN")
 BOT_VERSION = 0.1
-GITHUB_URL = "https://github.com/amccollister/DarkestDiscord/tree/dev"
+GITHUB_URL = "https://github.com/amccollister/DarkestDiscord/"
 DEFAULT_PREFIX = "dd."
 DATABASE_PATH = "db/database.db"
 SCHEMA_PATH = "db/schema.sql"
@@ -30,6 +30,13 @@ UNICODE_DIRECTIONAL = {"UP":        "\U0001f53c",
                        "FIRE":      "\U0001f525"}
 
 # --BASE VALUES-- #
+
+BUILDINGS = {"Blacksmith":          ["blacksmith_weapon_level", "blacksmith_armor_level", "blacksmith_discount_level"],
+             "Guild":               ["guild_skill_level_cap", "guild_discount_level"],
+             "Nomad Wagon":         ["nomad_trinket_count", "nomad_discount_level"],
+             "Sanitarium":          ["[sanitarium_discount_level"],
+             "Stagecoach":          ["stagecoach_size", "stagecoach_level_cap", "roster_size_level"],
+             "Survivalist Camp":    ["survivalist_discount_level"]}
 
 STAGECOACH_BASE_SIZE = 3
 STAGECOACH_TIME_LIMIT = 120

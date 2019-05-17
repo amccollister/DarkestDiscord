@@ -26,7 +26,7 @@ class Stagecoach(object):
         hero_count = len(self.bot.db.get_rows("STAGECOACH", "playerID", self.player.player_id))
         hero_cap = self.player.info["stagecoach_size"] + constants.STAGECOACH_BASE_SIZE
         while hero_count < hero_cap:
-            level = random.randint(0, self.player.info["stagecoach_level"])
+            level = random.randint(0, self.player.info["stagecoach_level_cap"])
             time = random.randint(1, constants.STAGECOACH_TIME_LIMIT)
             self.add_stagecoach(level, time)
             hero_count += 1
@@ -34,7 +34,7 @@ class Stagecoach(object):
 
     def add_stagecoach(self, level, time):
         adventurer_count = self.bot.db.get_row_count("ADVENTURER_LIST")
-        new_adventurer = random.randint(1, adventurer_count-1)
+        new_adventurer = random.randint(1, adventurer_count)
         name = "Dismas"
         columns = ["playerID", "advID", "level", "time", "name"]
         values = [self.player.info["playerID"], new_adventurer, level, time, name]

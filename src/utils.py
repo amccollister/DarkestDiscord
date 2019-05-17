@@ -1,3 +1,4 @@
+import asyncio
 import discord
 import src.constants as constants
 from discord.ext import commands
@@ -30,6 +31,16 @@ async def react_send(ctx, reactions, description=None, fields=None, image=None, 
     for emote in reactions:
         await msg.add_reaction(emote)
     return msg
+
+
+async def wait_for_react_change(ctx, message, timeout):
+    def check(reaction, user):
+        return user.id == ctx.author.id and reaction.message.id == message.id
+
+    done, pending = await asyncio.wait([ctx.bot.wait_for("reaction_add", check=check),
+                                        ctx.bot.wait_for("reaction_remove", check=check)],
+                                        timeout=timeout, return_when=asyncio.FIRST_COMPLETED)
+    return done.pop().result()
 
 
 def check_guild_owner(ctx):
