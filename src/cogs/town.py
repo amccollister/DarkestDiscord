@@ -115,5 +115,6 @@ class TownCog(commands.Cog):
         player = Player(ctx.bot, ctx.author.id)
         await util.send(ctx, "Upgrade menu will display here")
 
+
 def setup(bot):
     bot.add_cog(TownCog(bot))

@@ -2,10 +2,11 @@ import sys
 import src.utils as util
 import src.constants as constants
 
-from discord.ext.commands import Bot
+from discord.ext.commands import AutoShardedBot
 from src.classes.SQLHandler import SQLHandler
 
-class DarkestBot(Bot):
+
+class DarkestBot(AutoShardedBot):
     def __init__(self):
         # initialize bot
         super().__init__(command_prefix=util.get_pre)
