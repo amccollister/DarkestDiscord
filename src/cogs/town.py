@@ -111,6 +111,7 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def upgrade(self, ctx):
+        #TODO: make the upgrade menu
         #Choose which building to upgrade: Blacksmith, Guild, Nomad Wagon, Sanitarium, Stagecoach, Survivalist Camp
         player = Player(ctx.bot, ctx.author.id)
         await util.send(ctx, "Upgrade menu will display here")

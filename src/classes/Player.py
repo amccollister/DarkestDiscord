@@ -1,7 +1,6 @@
 import src.constants as constants
 from src.classes.Stagecoach import Stagecoach
 from src.classes.Adventurer import Adventurer
-# TODO: set info variable as the info and update the variable when anything changes
 
 
 class Player(object):
