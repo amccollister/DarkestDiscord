@@ -111,10 +111,23 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def upgrade(self, ctx):
-        #TODO: make the upgrade menu
+        #TODO: make the upgrade menu (get upgrade costs from player class)
         #Choose which building to upgrade: Blacksmith, Guild, Nomad Wagon, Sanitarium, Stagecoach, Survivalist Camp
+        default_state = True
         player = Player(ctx.bot, ctx.author.id)
-        await util.send(ctx, "Upgrade menu will display here")
+        react_list = util.generate_react_list(constants.BUILDINGS.keys())
+        buildings = [[k, v] for k, v in react_list.items()]
+        msg = await util.react_send(ctx, react_list.keys(), "Select the building you wish to upgrade", buildings)
+        await msg.add_reaction(constants.UNICODE_DIRECTIONAL["RETURN"])
+        while True:
+            try:
+                reaction, user = await util.wait_for_react_change(ctx, msg, constants.UPGRADE_REACT_TIME_LIMIT)
+                if not default_state and reaction.emoji == constants.UNICODE_DIRECTIONAL["RETURN"]:
+                    await msg.edit(embed=util.make_embed(ctx.command, "Select the building you wish to upgrade", buildings))
+                #TODO: add the react menu and stuff that i'm too tired to do now
+            except:
+                await msg.edit(embed=util.make_embed(ctx.command, "**CLOSED**", author=ctx.author))
+                break
 
 
 def setup(bot):

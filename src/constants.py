@@ -48,6 +48,8 @@ ADVENTURER_MAX_LEVEL = 6
 
 ROSTER_REACT_TIME_LIMIT = 600
 
+UPGRADE_REACT_TIME_LIMIT = 60
+
 LEVEL_UP = {"max_hp":           5,
             "dodge":            5,
             "prot":             0,
