@@ -35,11 +35,11 @@ class SQLHandler(object):
         self.con.commit()
 
     def get_row(self, table, column, value):
-        self.cur.execute("SELECT * FROM {} WHERE {} = {}".format(table, column, value))
+        self.cur.execute("SELECT * FROM {} WHERE {} = \"{}\"".format(table, column, value))
         return self.cur.fetchone()
 
     def get_rows(self, table, column, value):
-        self.cur.execute("SELECT * FROM {} WHERE {} = {}".format(table, column, value))
+        self.cur.execute("SELECT * FROM {} WHERE {} = \"{}\"".format(table, column, value))
         return self.cur.fetchall()
 
     def get_row_count(self, table):

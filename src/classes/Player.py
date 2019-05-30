@@ -29,10 +29,12 @@ class Player(object):
         pass
 
     def level_up(self, column):
+        if self.info[column] >= constants.UPGRADE_MAX_LEVEL:
+            return False
         self.bot.db.update_row("PLAYERS", "{0} = {0} + 1".format(column), "playerID = {}"
                                .format(self.player_id))
         self.update_info()
-        return "Increased {} by 1".format(column)
+        return True
 
     def add_resource(self, column, amount):
         self.bot.db.update_row("PLAYERS", "{0} = {0} + {1}".format(column, amount), "playerID = {}"
@@ -58,4 +60,29 @@ class Player(object):
             return False
         self.bot.db.delete_rows("ADVENTURERS", "heroID = {}".format(fired_hero.info["heroID"]))
         self.update_info()
+        return True
+
+    def get_building_cost(self, name):
+        price = {}
+        level = self.info[name]
+        base_cost = self.bot.db.get_row("TOWN_BASE_COST", "name", name)
+        level_cost = self.bot.db.get_row("TOWN_UPGRADE_COST", "name", name)
+        for key in base_cost.keys():
+            if key != "name":
+                price[key] = base_cost[key] + (level * level_cost[key])
+        return price
+
+    def get_building_cost_string(self, name):
+        output = ""
+        cost = self.get_building_cost(name)
+        for key, value in cost.items():
+            if int(value) > 0:
+                output += "{}: {}\n".format(key.capitalize(), value)
+        return output
+
+    def check_afford_building_cost(self, name):
+        cost = self.get_building_cost(name)
+        for key, value in cost.items():
+            if int(value) > self.info[key]:
+                return False
         return True

@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS PLAYERS(
 
 
 CREATE TABLE IF NOT EXISTS TOWN_BASE_COST(
-    name                TEXT NOT NULL,
+    name                TEXT PRIMARY KEY NOT NULL,
     busts               INTEGER NOT NULL,
     portraits           INTEGER NOT NULL,
     deeds               INTEGER NOT NULL,
@@ -112,7 +112,7 @@ INSERT OR IGNORE INTO TOWN_BASE_COST VALUES("survivalist_discount_level", 0, 0, 
 
 
 CREATE TABLE IF NOT EXISTS TOWN_UPGRADE_COST(
-    name                TEXT NOT NULL,
+    name                TEXT PRIMARY KEY NOT NULL,
     busts               INTEGER NOT NULL,
     portraits           INTEGER NOT NULL,
     deeds               INTEGER NOT NULL,

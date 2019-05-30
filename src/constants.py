@@ -34,9 +34,11 @@ UNICODE_DIRECTIONAL = {"UP":        "\U0001f53c",
 BUILDINGS = {"Blacksmith":          ["blacksmith_weapon_level", "blacksmith_armor_level", "blacksmith_discount_level"],
              "Guild":               ["guild_skill_level_cap", "guild_discount_level"],
              "Nomad Wagon":         ["nomad_trinket_count", "nomad_discount_level"],
-             "Sanitarium":          ["[sanitarium_discount_level"],
+             "Sanitarium":          ["sanitarium_discount_level"],
              "Stagecoach":          ["stagecoach_size", "stagecoach_level_cap", "roster_size_level"],
              "Survivalist Camp":    ["survivalist_discount_level"]}
+
+UPGRADE_MAX_LEVEL = 6
 
 STAGECOACH_BASE_SIZE = 3
 STAGECOACH_TIME_LIMIT = 120

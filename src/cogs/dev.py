@@ -37,8 +37,9 @@ class DevCog(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def level(self, ctx, arg1, arg2):
-        await util.send(ctx, Player(self.bot, ctx.author.id).add_resources(arg1, arg2))
+    async def test(self, ctx):
+        base_cost = self.bot.db.get_row("TOWN_BASE_COST", "name", "blacksmith_weapon_level")
+        print(base_cost)
 
     @commands.command()
     async def clear_heroes(self, ctx):

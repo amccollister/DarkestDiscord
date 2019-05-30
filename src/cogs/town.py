@@ -36,7 +36,7 @@ class TownCog(commands.Cog):
         await util.send(ctx, "You entered the shop!")
 
     @commands.command()
-    #@commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
+    @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
         player = Player(ctx.bot, ctx.author.id)
         adv_list = player.stagecoach.adv_list
@@ -111,8 +111,6 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def upgrade(self, ctx):
-        #TODO: make the upgrade menu (get upgrade costs from player class)
-        #Choose which building to upgrade: Blacksmith, Guild, Nomad Wagon, Sanitarium, Stagecoach, Survivalist Camp
         default_state = True
         player = Player(ctx.bot, ctx.author.id)
         react_list = util.generate_react_list(constants.BUILDINGS.keys())
@@ -122,12 +120,37 @@ class TownCog(commands.Cog):
         while True:
             try:
                 reaction, user = await util.wait_for_react_change(ctx, msg, constants.UPGRADE_REACT_TIME_LIMIT)
-                if not default_state and reaction.emoji == constants.UNICODE_DIRECTIONAL["RETURN"]:
-                    await msg.edit(embed=util.make_embed(ctx.command, "Select the building you wish to upgrade", buildings))
-                #TODO: add the react menu and stuff that i'm too tired to do now
+                if default_state and reaction.emoji in react_list.keys():
+                    chosen_building = constants.BUILDINGS[react_list[reaction.emoji]]
+                    upgrade_react_list = util.generate_react_list(chosen_building)
+                    fields = [["{} {}".format(constants.UNICODE_DIGITS[i], upgrade), player.get_building_cost_string(upgrade)]
+                              for i, upgrade in enumerate(chosen_building)]
+                    await msg.edit(embed=util.make_embed(ctx.command, "Select the upgrade you wish to improve", fields))
+                    default_state = False
+                elif not default_state:
+                    if reaction.emoji == constants.UNICODE_DIRECTIONAL["RETURN"]:
+                        await msg.edit(embed=util.make_embed(ctx.command, "Select the building you wish to upgrade", buildings))
+                        default_state = True
+                    elif reaction.emoji in upgrade_react_list.keys():
+                        chosen_upgrade = upgrade_react_list[reaction.emoji]
+                        if not player.check_afford_building_cost(chosen_upgrade):
+                            await ctx.author.send("You cannot afford this upgrade!")
+                        else:
+                            if player.level_up(chosen_upgrade):
+                                [player.add_resource(key, int(value) * -1) for key, value in player.get_building_cost(chosen_upgrade).items()]
+                            fields = [["{} {}".format(constants.UNICODE_DIGITS[i], upgrade), player.get_building_cost_string(upgrade)]
+                                      for i, upgrade in enumerate(chosen_building)]
+                            await msg.edit(embed=util.make_embed(ctx.command, "Select the upgrade you wish to improve", fields))
             except:
                 await msg.edit(embed=util.make_embed(ctx.command, "**CLOSED**", author=ctx.author))
                 break
+
+    @commands.command()
+    async def kit(self, ctx):
+        player = Player(ctx.bot, ctx.author.id)
+        resource = ["gold", "busts", "portraits", "deeds", "crests"]
+        [player.add_resource(r, 1000) for r in resource]
+        await ctx.send("Given 1000 of everything")
 
 
 def setup(bot):
