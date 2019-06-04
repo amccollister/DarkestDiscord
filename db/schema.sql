@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS CHANNEL(
     dungeonID   INTEGER DEFAULT NULL,
     prefix      TEXT);
 
-
+--entity-component system
 CREATE TABLE IF NOT EXISTS ITEM_LIST(
     itemID      INTEGER PRIMARY KEY NOT NULL,
     name        TEXT UNIQUE NOT NULL,

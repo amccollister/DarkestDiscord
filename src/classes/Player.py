@@ -5,6 +5,7 @@ from src.classes.Adventurer import Adventurer
 
 class Player(object):
     def __init__(self, bot, player_id):
+        #TODO: add inventory information
         self.bot = bot
         self.player_id = player_id
         self.info = self.get_player_info()

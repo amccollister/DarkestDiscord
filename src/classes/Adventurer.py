@@ -5,6 +5,8 @@ import src.utils as util
 
 class Adventurer(object):
     def __init__(self, bot, hero_id, player_id):
+        #TODO: add equipped trinket information
+        #TODO: reference quirks, effects, trinkets, skills, and maybe party?
         self.bot = bot
         self.hero_id = hero_id
         self.player_id = player_id
