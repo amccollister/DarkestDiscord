@@ -6,3 +6,6 @@ class Trinket(Item):
         super().__init__(bot, item_id)
         # TODO: Get rarity and additional effects as well and equip it?
         pass
+
+    def get_trinket_info(self):
+        pass

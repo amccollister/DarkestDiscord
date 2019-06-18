@@ -1,0 +1,298 @@
+table DUNGEON{
+  guildID INTEGER [pk]
+  town_channel INTEGER
+	dungeon_channel INTEGER
+	partyID INTEGER
+	dungeon_type TEXT
+	mission TEXT
+}
+
+
+table ITEM_LIST{
+  itemID      INTEGER [pk]
+  name        TEXT [not null, unique]
+  cost        INTEGER [not null]
+  stack_size  INTEGER [not null]
+  type        TEXT [not null]
+}
+
+
+table TRINKET_LIST{
+  trinketID INTEGER [pk]
+  itemID    INTEGER [not null]
+  trinketName TEXT
+
+}
+
+table TRINKET_EFFECT{
+  trinketID INTEGER
+  stat      TEXT [not null]
+  modifier  INTEGER [not null]
+}
+
+
+table ADVENTURER_LIST{
+  advID           INTEGER [pk]
+  class           TEXT    [not null, unique]
+  max_hp          INTEGER [not null]
+  dodge           INTEGER [not null]
+  prot            INTEGER [not null]
+  spd             INTEGER [not null]
+  acc             INTEGER [not null]
+  crit            INTEGER [not null]
+  dmg_lower       INTEGER [not null]
+  dmg_upper       INTEGER [not null]
+  stun_res        INTEGER [not null]
+  blight_res      INTEGER [not null]
+  disease_res     INTEGER [not null]
+  death_blow_res  INTEGER [not null]
+  move_res        INTEGER [not null]
+  bleed_res       INTEGER [not null]
+  debuff_res      INTEGER [not null]
+  trap_res        INTEGER [not null]
+  stress_res      INTEGER [not null, default: 0]
+  virtue_chance   INTEGER [not null, default: 0]
+  crit_bonus      TEXT    [not null]
+}
+
+
+table MONSTER_LIST{
+  monsterID         INTEGER [pk]
+  name            TEXT [not null, unique]
+  max_hp          INTEGER [not null]
+  dodge           INTEGER [not null]
+  prot            INTEGER [not null]
+  spd             INTEGER [not null]
+  acc             INTEGER [not null]
+  crit            INTEGER [not null]
+  dmg_lower       INTEGER [not null]
+  dmg_upper       INTEGER [not null]
+  stun_res        INTEGER [not null]
+  blight_res      INTEGER [not null]
+  disease_res     INTEGER [not null]
+  death_blow_res  INTEGER [not null]
+  move_res        INTEGER [not null]
+  bleed_res       INTEGER [not null]
+  debuff_res      INTEGER [not null]
+  trap_res        INTEGER [not null]
+}
+
+
+table EFFECT_LIST{
+  effectID INTEGER [pk]
+  name TEXT
+  stat TEXT
+}
+
+
+table SKILL_LIST{
+  skillID       INTEGER [pk]
+  range         TEXT
+  rank          INTEGER
+  target        INTEGER
+  target_ally   BOOLEAN
+  damage_mod    INTEGER
+  accuracy_mod  INTEGER
+  crit_mod      INTEGER
+}
+
+
+table SKILL_EFFECT{
+  skillID INTEGER
+  stat TEXT
+  modifier INTEGER
+  self BOOLEAN
+}
+
+
+table QUIRK_LIST{
+  quirkID INTEGER [pk]
+  name TEXT
+  stat TEXT
+}
+
+
+table PLAYERS{
+  playerID                    INTEGER [pk]
+  gold                        INTEGER [not null, default: 0]
+  busts                       INTEGER [not null, default: 0]
+  portraits                   INTEGER [not null, default: 0]
+  deeds                       INTEGER [not null, default: 0]
+  crests                      INTEGER [not null, default: 0]
+  blacksmith_weapon_level     INTEGER [not null, default: 0]
+  blacksmith_armor_level      INTEGER [not null, default: 0]
+  blacksmith_discount_level   INTEGER [not null, default: 0]
+  guild_skill_level_cap       INTEGER [not null, default: 0]
+  guild_discount_level        INTEGER [not null, default: 0]
+  nomad_trinket_count         INTEGER [not null, default: 0]
+  nomad_discount_level        INTEGER [not null, default: 0]
+  sanitarium_discount_level   INTEGER [not null, default: 0]
+  stagecoach_size             INTEGER [not null, default: 0]
+  stagecoach_level_cap        INTEGER [not null, default: 0]
+  roster_size_level           INTEGER [not null, default: 0]
+  survivalist_discount_level  INTEGER [not null, default: 0]
+}
+
+
+table TOWN_BASE_COST{
+  name                TEXT [pk]
+  busts               INTEGER [not null]
+  portraits           INTEGER [not null]
+  deeds               INTEGER [not null]
+  crests              INTEGER [not null]
+}
+
+
+table TOWN_UPGRADE_COST{
+  name                TEXT [pk]
+  busts               INTEGER [not null]
+  portraits           INTEGER [not null]
+  deeds               INTEGER [not null]
+  crests              INTEGER [not null]
+}
+
+
+table ADVENTURERS{
+  heroID INTEGER [pk]
+  advID INTEGER [not null]
+  playerID INTEGER [not null]
+  name TEXT [not null]
+  level INTEGER [not null]
+  hp INTEGER [not null]
+  stress INTEGER [not null, default: 0]
+  exp INTEGER [not null]
+  weapon_level INTEGER [not null]
+  armor_level INTEGER [not null]
+  status TEXT [not null, default: "ALIVE"]
+}
+
+
+table STAGECOACH{
+  stagecoachID INTEGER [pk]
+  playerID INTEGER [not null]
+  advID INTEGER [not null]
+  name TEXT [not null]
+  level INTEGER [not null]
+  time INTEGER [not null]
+}
+
+
+table PARTY{
+  partyID                 INTEGER [pk]
+  leaderID                INTEGER [not null]
+  pos1                    INTEGER [not null]
+  pos2                    INTEGER [not null]
+  pos3                    INTEGER [not null]
+  pos4                    INTEGER [not null]
+}
+
+
+table ROOM{
+  roomID INTEGER [pk]
+  guildID INTEGER
+  room BOOLEAN
+  type TEXT
+}
+
+
+table ROOM_ENEMY{
+  roomID INTEGER
+  monsterID INTEGER
+}
+
+
+table ROOM_TREASURE{
+  roomID INTEGER
+  itemID INTEGER
+}
+
+
+table QUIRKS{
+  quirkID INTEGER [not null]
+  heroID INTEGER [not null]
+  modifier INTEGER
+}
+
+
+table INVENTORY{
+  itemID INTEGER [not null]
+  playerID INTEGER [not null]
+}
+
+
+table TRINKETS{
+  heroID INTEGER [not null]
+  slot1 INTEGER
+  slot2 INTEGER
+}
+
+
+table SKILLS{
+  skillID INTEGER [not null]
+  heroID INTEGER [not null]
+}
+
+
+table EFFECTS{
+  effectID INTEGER [not null]
+  heroID INTEGER [not null]
+  stat TEXT
+  modifier INTEGER
+  duration INTEGER
+}
+
+
+
+Ref: "ADVENTURER_LIST"."advID" < "STAGECOACH"."advID"
+
+Ref: "PLAYERS"."playerID" < "STAGECOACH"."playerID"
+
+Ref: "QUIRK_LIST"."quirkID" < "QUIRKS"."quirkID"
+
+Ref: "SKILL_LIST"."skillID" < "SKILLS"."skillID"
+
+Ref: "ADVENTURERS"."heroID" < "SKILLS"."heroID"
+
+Ref: "ADVENTURERS"."heroID" < "QUIRKS"."heroID"
+
+Ref: "PLAYERS"."playerID" < "INVENTORY"."playerID"
+
+Ref: "SKILL_LIST"."skillID" < "SKILL_EFFECT"."skillID"
+
+Ref: "DUNGEON"."guildID" < "ROOM"."guildID"
+
+Ref: "ROOM"."roomID" < "ROOM_ENEMY"."roomID"
+
+Ref: "ROOM"."roomID" < "ROOM_TREASURE"."roomID"
+
+Ref: "ITEM_LIST"."itemID" < "ROOM_TREASURE"."itemID"
+
+Ref: "MONSTER_LIST"."monsterID" < "ROOM_ENEMY"."monsterID"
+
+Ref: "EFFECT_LIST"."effectID" < "EFFECTS"."effectID"
+
+Ref: "ADVENTURERS"."heroID" < "EFFECTS"."heroID"
+
+Ref: "ITEM_LIST"."itemID" < "INVENTORY"."itemID"
+
+Ref: "PLAYERS"."playerID" < "PARTY"."leaderID"
+
+Ref: "PARTY"."partyID" < "DUNGEON"."partyID"
+
+Ref: "ADVENTURERS"."heroID" < "PARTY"."pos1"
+
+Ref: "ADVENTURERS"."heroID" < "PARTY"."pos2"
+
+Ref: "ADVENTURERS"."heroID" < "PARTY"."pos3"
+
+Ref: "ADVENTURERS"."heroID" < "PARTY"."pos4"
+
+Ref: "ADVENTURERS"."heroID" < "TRINKETS"."heroID"
+
+Ref: "TRINKET_LIST"."trinketID" < "TRINKETS"."slot1"
+
+Ref: "TRINKET_LIST"."trinketID" < "TRINKETS"."slot2"
+
+Ref: "ITEM_LIST"."itemID" < "TRINKET_LIST"."itemID"
+
+Ref: "TRINKET_LIST"."trinketID" < "TRINKET_EFFECT"."trinketID"
