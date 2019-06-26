@@ -23,6 +23,7 @@ class Stagecoach(object):
                                                                       (datetime.now() - now).microseconds / 10 ** 6))
 
     def check_stagecoach(self):
+        #TODO: stagecoach machine broke
         hero_count = len(self.bot.db.get_rows("STAGECOACH", "playerID", self.player.player_id))
         hero_cap = self.player.info["stagecoach_size"] + constants.STAGECOACH_BASE_SIZE
         while hero_count < hero_cap:

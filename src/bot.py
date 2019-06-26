@@ -4,13 +4,19 @@ import src.constants as constants
 
 from discord.ext.commands import AutoShardedBot
 from src.classes.SQLHandler import SQLHandler
+from src.classes.Dungeon import Dungeon
+from src.classes.Player import Player
 
 
 class DarkestBot(AutoShardedBot):
     def __init__(self):
         # initialize bot
-        super().__init__(command_prefix=util.get_pre)
+        super().__init__(command_prefix=self.get_pre)
         self.remove_command('help')  # We will be implementing our own.
+
+        # object lists for all the guilds and players
+        self.dungeons = {}
+        self.players = {}
 
         # establish sql connection here
         self.db = SQLHandler()
@@ -22,12 +28,26 @@ class DarkestBot(AutoShardedBot):
     def run(self):
         super().run(constants.BOT_TOKEN)
 
+    def get_pre(self, _, ctx):
+        if not ctx.guild:
+            return constants.DEFAULT_PREFIX
+        dungeon = self.get_dungeon(ctx.guild.id)
+        return dungeon.info["prefix"]
+
     def sync_servers(self):
         bot_guilds = [x.id for x in self.guilds]
         for gid in bot_guilds:
-            columns = ["guildID", "prefix"]
-            values = [gid, constants.DEFAULT_PREFIX]
-            self.db.insert_row("CHANNEL", columns, values)
+            self.dungeons[gid] = Dungeon(self, gid)
+
+    def get_dungeon(self, guild_id):
+        if guild_id not in self.dungeons:
+            self.dungeons[guild_id] = Dungeon(self, guild_id)
+        return self.dungeons[guild_id]
+
+    def get_player(self, player_id):
+        if player_id not in self.players:
+            self.players[player_id] = Player(self, player_id)
+        return self.players[player_id]
 
     async def on_ready(self):
         print("------------")

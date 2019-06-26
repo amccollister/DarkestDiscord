@@ -47,7 +47,7 @@ class SQLHandler(object):
         return len(self.cur.fetchall())
 
     def delete_rows(self, table, conditional):
-        self.cur.execute("DELETE FROM {} WHERE {}".format(table, conditional))
+        self.cur.execute("DELETE FROM {0} WHERE {1}".format(table, conditional))
         self.con.commit()
 
     def update_row(self, table, update, conditional):

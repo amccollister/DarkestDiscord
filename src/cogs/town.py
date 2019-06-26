@@ -25,7 +25,9 @@ class TownCog(commands.Cog):
     async def cog_before_invoke(self, ctx):
         if not ctx.guild:
             return True
-        channel = util.get_db_channel(ctx.bot, "town", ctx.guild.id)
+        dungeon = self.bot.get_dungeon(ctx.guild.id)
+        channel = self.bot.get_channel(dungeon.info["town_channel"])
+        # channel = util.get_db_channel(ctx.bot, "town", ctx.guild.id)
         if not channel:
             raise commands.CommandError(message="You may not use town commands until the channel has been set.")
         elif channel.id != ctx.channel.id:
@@ -58,7 +60,9 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def roster(self, ctx):
-        player = Player(ctx.bot, ctx.author.id)
+        # player = Player(ctx.bot, ctx.author.id)
+        #Todo: figure out why this isn't working
+        player = self.bot.get_player(ctx.author.id)
         default_state = True
         selected_hero = None
         if not player.roster:

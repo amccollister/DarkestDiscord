@@ -34,34 +34,45 @@ class SetupCog(commands.Cog):
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_town(self, ctx):
-        util.set_db_channel(ctx.bot, "town", ctx.channel.id, ctx.guild.id)
+        dungeon = self.bot.get_dungeon(ctx.guild.id)
+        dungeon.set_channel("town", ctx.channel.id)
+        # util.set_db_channel(ctx.bot, "town", ctx.channel.id, ctx.guild.id)
         await util.send(ctx, "This is now the town channel.")
 
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_dungeon(self, ctx):
-        util.set_db_channel(ctx.bot, "dungeon", ctx.channel.id, ctx.guild.id)
+        dungeon = self.bot.get_dungeon(ctx.guild.id)
+        dungeon.set_channel("dungeon", ctx.channel.id)
+        # util.set_db_channel(ctx.bot, "dungeon", ctx.channel.id, ctx.guild.id)
         await util.send(ctx, "This is now the dungeon channel.")
 
     @commands.command()
     @commands.check(util.check_guild_owner)
     async def set_prefix(self, ctx, arg):
-        print(arg)
+        dungeon = self.bot.get_dungeon(ctx.guild.id)
         if any(ch in arg for ch in [" ", "\'", "\""]):
             raise commands.CommandError(message="The prefix cannot have spaces, \', or \".")
-        ctx.bot.db.update_row("CHANNEL", "prefix = '{}'".format(arg), "guildID = {}".format(ctx.guild.id))
+        dungeon.set_prefix(arg)
+        # ctx.bot.db.update_row("CHANNEL", "prefix = '{}'".format(arg), "guildID = {}".format(ctx.guild.id))
         await util.send(ctx, "The prefix has been set to {}".format(arg))
 
     @commands.command()
     async def town(self, ctx):
-        channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
+        # change to dungeon object
+        # channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
+        dungeon = self.bot.get_dungeon(ctx.guild.id)
+        channel = self.bot.get_channel(dungeon.info["town_channel"])
         if not channel:
             return await util.send(ctx, "The town has not been set.")
         await util.send(ctx, "The town can be found at: {}".format(channel.mention))
 
     @commands.command()
     async def dungeon(self, ctx):
-        channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
+        # change to dungeon object
+        # channel = util.get_db_channel(self.bot, "town", ctx.guild.id)
+        dungeon = self.bot.get_dungeon(ctx.guild.id)
+        channel = self.bot.get_channel(dungeon.info["dungeon_channel"])
         if not channel:
             return await util.send(ctx, "The dungeon has not been set.")
         await util.send(ctx, "The dungeon can be found at: {}".format(channel.mention))

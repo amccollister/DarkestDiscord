@@ -56,21 +56,23 @@ def generate_react_list(values):
 
 ### DB commands ###
 
-def get_pre(bot, message):
-    if not message.guild:
-        return constants.DEFAULT_PREFIX
-    row = bot.db.get_row("CHANNEL", "guildID", message.guild.id)
-    return row["prefix"]
+# def get_pre(bot, ctx):
+#     if not ctx.guild:
+#         return constants.DEFAULT_PREFIX
+#     dungeon = bot.get_dungeon(ctx.guild.id)
+#     return dungeon.info["prefix"]
+    # row = bot.db.get_row("CHANNEL", "guildID", message.guild.id)
+    # return row["prefix"]
 
 
-def get_db_channel(bot, name, guild_id):
-    row = bot.db.get_row("CHANNEL", "guildID", guild_id)
-    return bot.get_channel(row["{}ID".format(name)])
+# def get_db_channel(bot, name, guild_id):
+#     row = bot.db.get_row("CHANNEL", "guildID", guild_id)
+#     return bot.get_channel(row["{}ID".format(name)])
+#
+#
+# def set_db_channel(bot, name, channel_id, guild_id):
+#     bot.db.update_row("CHANNEL", "{}ID = {}".format(name, channel_id), "guildID = {}".format(guild_id))
 
 
-def set_db_channel(bot, name, channel_id, guild_id):
-    bot.db.update_row("CHANNEL", "{}ID = {}".format(name, channel_id), "guildID = {}".format(guild_id))
-
-
-def get_roster(bot, player_id):
-    return bot.db.get_row("HEROES", "playerID", player_id)
+#def get_roster(bot, player_id):
+    #return bot.db.get_row("HEROES", "playerID", player_id)
