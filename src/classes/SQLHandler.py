@@ -7,8 +7,14 @@ class SQLHandler(object):
         self.con = sqlite3.connect(constants.DATABASE_PATH, isolation_level=None)
         self.con.row_factory = sqlite3.Row
         self.cur = self.con.cursor()
+
+        # Creation of tables in db
         with open(constants.SCHEMA_PATH) as schema:
             self.cur.executescript(schema.read())
+
+        # Insertion of data in db
+        with open(constants.INSERT_PATH) as insert:
+            self.cur.executescript(insert.read())
 
     @staticmethod
     def format_values(vals):
