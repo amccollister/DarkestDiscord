@@ -57,7 +57,8 @@ CREATE TABLE IF NOT EXISTS `ADVENTURER_LIST`
   `trap_res` INTEGER NOT NULL,
   `stress_res` INTEGER NOT NULL,
   `virtue_chance` INTEGER NOT NULL,
-  `crit_bonus` TEXT NOT NULL
+  `crit_bonus_stat` TEXT NOT NULL,
+  `crit_bonus_mod` TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `MONSTER_LIST`
@@ -165,10 +166,10 @@ CREATE TABLE IF NOT EXISTS `ADVENTURERS`
   `name` TEXT NOT NULL,
   `level` INTEGER NOT NULL,
   `hp` INTEGER NOT NULL,
-  `stress` INTEGER NOT NULL,
-  `exp` INTEGER NOT NULL,
-  `weapon_level` INTEGER NOT NULL,
-  `armor_level` INTEGER NOT NULL,
+  `stress` INTEGER NOT NULL DEFAULT 0,
+  `exp` INTEGER NOT NULL DEFAULT 0,
+  `weapon_level` INTEGER NOT NULL DEFAULT 0,
+  `armor_level` INTEGER NOT NULL DEFAULT 0,
   `status` TEXT NOT NULL DEFAULT 'ALIVE'
 );
 

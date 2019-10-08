@@ -54,6 +54,7 @@ class Player(object):
         columns = ["advID", "playerID", "level", "hp", "name"]
         values = [adv_id, self.player_id, stagecoach_hire["level"], hp, stagecoach_hire["name"]]
         self.bot.db.insert_row("ADVENTURERS", columns, values)
+        self.roster = self.get_roster()
         return True
 
     def fire(self, fired_hero):

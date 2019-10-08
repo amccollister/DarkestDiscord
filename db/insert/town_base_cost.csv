@@ -1,0 +1,13 @@
+name,busts,portraits,deeds,crests
+"blacksmith_weapon_level",0,0,8,8
+"blacksmith_armor_level",0,0,8,8
+"blacksmith_discount_level",0,0,4,4
+"guild_skill_level_cap",0,6,0,14
+"guild_discount_level",0,2,0,6
+"nomad_trinket_count",0,0,0,10
+"nomad_discount_level",0,0,0,8
+"sanitarium_discount_level",5,0,0,5
+"stagecoach_size",0,0,3,4
+"stagecoach_level_cap",9,0,0,12
+"roster_size_level",0,0,3,4
+"survivalist_discount_level",0,0,0,15

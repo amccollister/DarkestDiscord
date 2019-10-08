@@ -12,7 +12,6 @@ class DungeonCog(commands.Cog):
             raise commands.CommandError(message="You may not use dungeon commands through direct message.")
         dungeon = self.bot.get_dungeon(ctx.guild.id)
         channel = self.bot.get_channel(dungeon.info["dungeon_channel"])
-        # channel = util.get_db_channel(self.bot, "dungeon", ctx.guild.id)
         if not channel:
             raise commands.CommandError(message="You may not use dungeon commands until the channel has been set.")
         elif channel.id != ctx.channel.id:

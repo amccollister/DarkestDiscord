@@ -1,3 +1,5 @@
+import os
+import csv
 import sqlite3
 import src.constants as constants
 
@@ -13,15 +15,25 @@ class SQLHandler(object):
             self.cur.executescript(schema.read())
 
         # Insertion of data in db
-        with open(constants.INSERT_PATH) as insert:
-            self.cur.executescript(insert.read())
+        for filename in os.listdir(constants.INSERT_PATH):
+            path = "{}/{}".format(constants.INSERT_PATH, filename)
+            table = filename[:-4].upper()
+            with open(path) as file:
+                reader = list(csv.reader(file, delimiter=",", quotechar="|"))
+                columns = ", ".join(reader[0])
+                if len(reader) == 1: continue
+                for row in reader[1:]:
+                    self.cur.execute("INSERT OR REPLACE INTO {0} ({1}) VALUES({2})"
+                                     .format(table, columns, ", ".join(row)))
+                    self.con.commit()
+
 
     @staticmethod
     def format_values(vals):
         values = vals
         for i in range(len(values)):
             if type(values[i]) == str:
-                values[i] = "'{}'".format(values[i])
+                values[i] = "\"{}\"".format(values[i])
             values[i] = str(values[i])
         return ", ".join(values)
 

@@ -27,7 +27,6 @@ class TownCog(commands.Cog):
             return True
         dungeon = self.bot.get_dungeon(ctx.guild.id)
         channel = self.bot.get_channel(dungeon.info["town_channel"])
-        # channel = util.get_db_channel(ctx.bot, "town", ctx.guild.id)
         if not channel:
             raise commands.CommandError(message="You may not use town commands until the channel has been set.")
         elif channel.id != ctx.channel.id:
@@ -40,7 +39,7 @@ class TownCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, constants.STAGECOACH_COOLDOWN, BucketType.user)
     async def stagecoach(self, ctx):
-        player = Player(ctx.bot, ctx.author.id)
+        player = self.bot.get_player(ctx.author.id)
         adv_list = player.stagecoach.adv_list
         react = util.generate_react_list(adv_list)
         msg = await util.react_send(ctx, react.keys(), fields=player.stagecoach.get_stagecoach_output())
@@ -60,8 +59,6 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def roster(self, ctx):
-        # player = Player(ctx.bot, ctx.author.id)
-        #Todo: figure out why this isn't working
         player = self.bot.get_player(ctx.author.id)
         default_state = True
         selected_hero = None
@@ -73,12 +70,13 @@ class TownCog(commands.Cog):
         while True:
             try:
                 reaction, user = await util.wait_for_react_change(ctx, msg, constants.ROSTER_REACT_TIME_LIMIT)
-                if default_state and reaction.emoji in react.keys():
-                    default_state = False
-                    selected_hero = react[reaction.emoji]
-                    await msg.edit(embed=selected_hero.get_detailed_info())
-                    await msg.add_reaction(constants.UNICODE_DIRECTIONAL["RETURN"])
-                    await msg.add_reaction(constants.UNICODE_DIRECTIONAL["FIRE"])
+                if default_state:# and reaction.emoji in react.keys():
+                    if reaction.emoji in react.keys():
+                        default_state = False
+                        selected_hero = react[reaction.emoji]
+                        await msg.edit(embed=selected_hero.get_detailed_info())
+                        await msg.add_reaction(constants.UNICODE_DIRECTIONAL["RETURN"])
+                        await msg.add_reaction(constants.UNICODE_DIRECTIONAL["FIRE"])
                 else:
                     if reaction.emoji == constants.UNICODE_DIRECTIONAL["RETURN"]:
                         output = [hero.get_basic_info(index) for index, hero in enumerate(player.roster)]
@@ -108,7 +106,8 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def profile(self, ctx):
-        row = Player(ctx.bot, ctx.author.id).info
+        player = self.bot.get_player(ctx.author.id)
+        row = player.info
         profile = [[key, row[key]] for key in row.keys()]
         profile.pop(0)
         await util.send(ctx, fields=profile, thumbnail=ctx.author.avatar_url)
@@ -116,7 +115,7 @@ class TownCog(commands.Cog):
     @commands.command()
     async def upgrade(self, ctx):
         default_state = True
-        player = Player(ctx.bot, ctx.author.id)
+        player = self.bot.get_player(ctx.author.id)
         react_list = util.generate_react_list(constants.BUILDINGS.keys())
         buildings = [[k, v] for k, v in react_list.items()]
         msg = await util.react_send(ctx, react_list.keys(), "Select the building you wish to upgrade", buildings)
@@ -151,7 +150,7 @@ class TownCog(commands.Cog):
 
     @commands.command()
     async def kit(self, ctx):
-        player = Player(ctx.bot, ctx.author.id)
+        player = self.bot.get_player(ctx.author.id)
         resource = ["gold", "busts", "portraits", "deeds", "crests"]
         [player.add_resource(r, 1000) for r in resource]
         await ctx.send("Given 1000 of everything")

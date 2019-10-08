@@ -8,7 +8,7 @@ GITHUB_URL = "https://github.com/amccollister/DarkestDiscord/"
 DEFAULT_PREFIX = "dd."
 DATABASE_PATH = "db/database.db"
 SCHEMA_PATH = "db/schema.sql"
-INSERT_PATH = "db/data_insertion.sql"
+INSERT_PATH = "db/insert"
 COGS = ["setup", "town", "dungeon", "dev"]
 
 UNICODE_DIGITS = ["\U00000031\U000020e3",
