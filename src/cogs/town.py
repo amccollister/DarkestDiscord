@@ -7,7 +7,13 @@ from discord.ext.commands.cooldowns import BucketType
 from src.classes.Player import Player
 from src.classes.Stagecoach import Stagecoach
 
+"""
+A town is a single channel on a guild.
+Only town commands may be performed within.
 
+Commands:
+
+"""
 class TownCog(commands.Cog):
     def __init__(self, bot):
         # grab bot attributes
