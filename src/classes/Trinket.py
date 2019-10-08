@@ -1,3 +1,13 @@
+"""
+Trinket class for every equipped trinket by an adventurer.
+When unequipped, should return to the user's inventory and become an Item.
+
+Variables:
+
+Methods:
+
+"""
+
 from src.classes.Item import Item
 
 

@@ -1,3 +1,13 @@
+"""
+Stagecoach class to hold available heroes per player
+Any hero acquired is transferred to the Adventurers table and removed from the Stagecoach table.
+
+Variables:
+
+Methods:
+
+"""
+
 import random
 import src.constants as constants
 

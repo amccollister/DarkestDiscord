@@ -1,3 +1,12 @@
+"""
+Player class for each user known by the bot.
+It is the cornerstone for all updates regarding the player's heroes, inventory, roster, and stagecoach.
+
+Variables:
+
+Methods:
+"""
+
 import src.constants as constants
 from src.classes.Stagecoach import Stagecoach
 from src.classes.Adventurer import Adventurer

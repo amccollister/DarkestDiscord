@@ -1,3 +1,14 @@
+"""
+Adventurer class for every character that a Player owns.
+Instances should be persistent while the bot is active for every adventurer in play.
+Instances will expire when the Adventurer does.
+
+Variables:
+
+Methods:
+
+"""
+
 import re
 import src.constants as constants
 import src.utils as util
