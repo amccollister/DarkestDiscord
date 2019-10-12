@@ -5,11 +5,13 @@ Should contain a column and mod to be used by the Adventurer class. i.e. (spd, -
 
 Variables:
     quirk_id - the id of the Quirk
-    name - the name of th Quirk
+    name - the name of the Quirk
     stat - the stat affected by the Quirk
     modifier - the mod of the Quirk
+    positive - boolean value noting positive or negative quirk
 Methods:
-    get_quirk_info
+    get_quirk_info - grab info from table based on the id of the quirk
+    get_modiifier - obtain the modifier of the quirk and submit to the database
 """
 
 class Quirk(object):

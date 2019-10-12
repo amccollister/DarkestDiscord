@@ -3,9 +3,9 @@ Trinket class for every equipped trinket by an adventurer.
 When unequipped, should return to the user's inventory and become an Item.
 
 Variables:
-
+    trinket_id
 Methods:
-
+    get_trinket_id
 """
 
 from src.classes.Item import Item
