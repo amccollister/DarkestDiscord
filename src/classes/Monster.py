@@ -4,8 +4,11 @@ One instance created for each monster in any dungeon.
 Stats are nearly identical to Adventurer's aside from crit bonus.
 
 Variables:
+    monster_id
+    info - list of columns from the table
 
 Methods:
+    get_monster_info
 
 """
 

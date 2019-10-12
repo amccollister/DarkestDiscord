@@ -1,14 +1,19 @@
+"""
+Dungeon class for each registered guild.
+Contains all the dungeon, monster, encounter, and loot information for each room.
+Instance expires when a dungeon is completed and reset.
+
+Variables:
+
+Methods:
+
+Note: Consider making a room class for this?
+"""
+
 from src.classes.Party import Party
 from src.constants import DEFAULT_PREFIX
 
-"""
-A dungeon is a single channel and party in a Discord guild.
-Only dungeon commands may be performed within.
 
-Task:   Handle the generation and storage of a single dungeon for a party to run.
-        Respond to all the dungeon related commands within the dungeon channel.
-        
-"""
 class Dungeon(object):
     def __init__(self, bot, guild_id):
         self.bot = bot
