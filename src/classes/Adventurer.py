@@ -4,9 +4,29 @@ Instances should be persistent while the bot is active for every adventurer in p
 Instances will expire when the Adventurer does.
 
 Variables:
-
+???
+    bot - the primary bot instance
+    hero_id - id of the hero in the table
+    player_id - id of the player that hired this hero
+    info - a list of base stats from db
+    stats - a list of proper stats post-modifiers for levelled hero
+    trinkets - a list of up to two trinkets equipped by an Adventurer
+    effects - a list of status effects afflicting an Adventurer
+    quirks - a list of quirks afflicting an Adventurer
+    skills - a list of up to four skills equipped by an Adventurer
 Methods:
+    get_adventurer_info
 
+
+    Need methods for:
+        trinkets
+            get_trinkets
+        effects
+            get_effects
+        quirks
+            get_quirks
+        skills
+            get_skills
 """
 
 import re

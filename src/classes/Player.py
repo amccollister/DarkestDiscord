@@ -3,8 +3,25 @@ Player class for each user known by the bot.
 It is the cornerstone for all updates regarding the player's heroes, inventory, roster, and stagecoach.
 
 Variables:
-
+    bot - primary bot instance
+    player_id - Player's ID
+    info - a list of the Player's info in the db
+    roster - a list of the Adventurers in the Player's roster
+    stagecoach - an instance of a Stagecoach for the Player
+    inventory - a dictionary of itemIDs mapped to number of items in a Player's inventory
 Methods:
+    update_info
+    get_player_info
+    get_roster
+    get_roster_cap
+    get_adventurer
+    level_up
+    add_resource
+    hire
+    fire
+    get_building_cost
+    get_building_cost_string
+    check_afford_building_cost
 """
 
 import src.constants as constants

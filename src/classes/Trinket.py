@@ -4,8 +4,12 @@ When unequipped, should return to the user's inventory and become an Item.
 
 Variables:
     trinket_id
+    name
+    stat
+    modifier
+    rarity
 Methods:
-    get_trinket_id
+    get_trinket_info
 """
 
 from src.classes.Item import Item

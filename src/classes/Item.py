@@ -3,11 +3,11 @@ Item class for every owned item by players.
 Instance will expire when the item is no longer owned.
 
 Variables:
+    player_id
     item_id
     item_type
     value
-    use
-
+    consumable - boolean value indicating if it can be used
 Methods:
     get_item_info
 

@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `TRINKET_LIST`
   `trinketID` INTEGER PRIMARY KEY,
   `itemID` INTEGER NOT NULL,
   `trinketName` TEXT,
+  `rarity` TEXT,
    FOREIGN KEY (`itemID`) REFERENCES `ITEM_LIST` (`itemID`)
 );
 
@@ -96,7 +97,6 @@ CREATE TABLE IF NOT EXISTS `SKILL_LIST`
   `range` TEXT,
   `rank` INTEGER,
   `target` INTEGER,
-  `target_ally` BOOLEAN,
   `damage_mod` INTEGER,
   `accuracy_mod` INTEGER,
   `crit_mod` INTEGER

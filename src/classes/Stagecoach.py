@@ -3,8 +3,17 @@ Stagecoach class to hold available heroes per player
 Any hero acquired is transferred to the Adventurers table and removed from the Stagecoach table.
 
 Variables:
+    bot
+    player
+    adv_list
 
 Methods:
+    refresh_stagecoach
+    check_stagecoach
+    add_stagecoach
+    get_class_row
+    get_adv_hired
+    get_stagecoach_output
 
 """
 
