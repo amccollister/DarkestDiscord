@@ -12,8 +12,13 @@ Methods:
     get_monster_info
 
     Need methods for
-        skills
+        skills (Skills are immutable and set per monster. Shouldn't have add or remove)
+            get_skills
+            use_skill - pick a random? skill and target
         effects
+            get_effects
+            add_effect
+            remove_effect
 
 """
 

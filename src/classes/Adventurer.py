@@ -17,16 +17,23 @@ Variables:
 Methods:
     get_adventurer_info
 
-
     Need methods for:
         trinkets
             get_trinkets
+            add_trinket
+            remove_trinket
         effects
             get_effects
+            add_effect
+            remove_effect
         quirks
             get_quirks
+            add_quirk
+            remove_quirk
         skills
             get_skills
+            add_skill
+            remove_skill
 """
 
 import re
