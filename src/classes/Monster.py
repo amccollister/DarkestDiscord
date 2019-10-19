@@ -8,9 +8,11 @@ Variables:
     info - list of columns from the table
     effects - a list of status effects afflicting a Monster
     skills - a list of up to four skills equipped by a Monster
+    alive - boolean value indicating health > 0
 Methods:
     get_monster_info
-
+    heal
+    damage
     Need methods for
         skills (Skills are immutable and set per monster. Shouldn't have add or remove)
             get_skills

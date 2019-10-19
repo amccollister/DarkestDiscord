@@ -1,13 +1,30 @@
 """
 Dungeon class for each registered guild.
 Contains all the dungeon, monster, encounter, and loot information for each room.
-Instance expires when a dungeon is completed and reset.
+This also contains and sets the prefix for each guild.
+Instance expires when a guild is no longer registered.
 
 Variables:
-
+    bot
+    guild_id
+    info
+    party - the Party delving this dungeon
+    rooms - a list of all Rooms in the dungeon
+    mission - the mission statement for the party
+    reward - a list of items awarded upon mission completion
+    location - the room that the party currently occupies
 Methods:
+    update_info
+    get_dungeon_info
+    generate_dungeon - generates the Rooms, mission, and rewards for the dungeon
+    generate_map - create a map for the whole dungeon including the player location
+    set_party
+    set_channel
+    set_prefix
+    move_party
+    start_mission
+    complete_mission
 
-Note: Consider making a room class for this?
 """
 
 from src.classes.Party import Party
