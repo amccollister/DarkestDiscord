@@ -15,10 +15,20 @@ Methods:
     generate_room - get the monsters/loot/encounters in a room.
 """
 
-
 class Room(object):
-    def __init__(self):
-        pass
+    def __init__(self, bot, room_id):
+        self.bot = bot
+        self.room_id = room_id
+        self.info = self.get_room_info()
+        self.monsters = None
+        self.treasure = None
+        self.previous = None
+        self.next = None
+        self.encounter = None
 
     def get_room_info(self):
+        return self.bot.db.get_row("ROOM", "roomID", self.room_id)
+
+    def generate_room(self):
+        # Randomly seed a room using some algorithm
         pass

@@ -7,17 +7,20 @@ Variables:
     item_id
     item_type
     value
-    consumable - boolean value indicating if it can be used
+    type - value indicating if it is consumable
 Methods:
     get_item_info
-
 """
 
 
 class Item(object):
-    def __init__(self, bot, item_id):
-        # TODO: Get id, item type, and gold costs as well as item uses
-        pass
+    def __init__(self, db, item_id):
+        # TODO: Will need effects and such
+        self.item_id = item_id
+        self.db = db
+        self.info = self.get_item_info()
+        self.value = self.info["cost"]
+        self.type = self.info["type"]
 
     def get_item_info(self):
-        pass
+        return self.db.get_row("ITEM_LIST", "itemID", self.item_id)

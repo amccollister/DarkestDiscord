@@ -21,8 +21,6 @@ import random
 import src.constants as constants
 
 from datetime import datetime
-# TODO: Code this better I think
-
 
 class Stagecoach(object):
     def __init__(self, bot, player):

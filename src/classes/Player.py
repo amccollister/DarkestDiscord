@@ -47,7 +47,7 @@ class Player(object):
 
     def get_roster(self):
         heroes = self.bot.db.get_rows("ADVENTURERS", "playerID", self.player_id)
-        return [Adventurer(self.bot, hero["heroID"], self.player_id) for hero in heroes]
+        return [Adventurer(self.bot, hero["heroID"]) for hero in heroes]
 
     def get_roster_cap(self):
         return constants.ADVENTURER_BASE_CAPACITY + self.info["roster_size_level"]

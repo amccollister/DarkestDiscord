@@ -11,10 +11,18 @@ Variables:
     positive - boolean value noting positive or negative quirk
 Methods:
     get_quirk_info - grab info from table based on the id of the quirk
-    get_modiifier - obtain the modifier of the quirk and submit to the database
+    get_modifier - obtain the modifier of the quirk and submit to the database
 """
 
 class Quirk(object):
-    def __init__(self):
+    def __init__(self, bot, quirk_id):
         #TODO: grab quirk information from the table
+        self.bot = bot
+        self.quirk_id = quirk_id
+        self.info = self.get_quirk_info()
+
+    def get_quirk_info(self):
+        return self.bot.db.get_row("QUIRK_LIST", "quirkID", self.quirk_id)
+
+    def get_modifier(self):
         pass

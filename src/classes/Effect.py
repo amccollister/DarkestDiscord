@@ -14,6 +14,17 @@ Methods:
 """
 
 class Effect(object):
-    def __init__(self):
+    def __init__(self, db, char_id):
         # TODO: grab effect information from the table
-        pass
+        self.db = db
+        self.info = db.get_row("EFFECT", "charID", char_id)
+        self.name = db.get_row("EFFECT_LIST", "effectID", self.info["effectID"])["name"]
+        self.stat = self.info["stat"]
+        self.modifier = self.info["modifier"]
+        self.duration = self.info["duration"]
+
+    def reduce_duration(self):
+        self.duration -= 1
+
+    def get_effect_info(self):
+        self.info = self.db.get_row("EFFECT", "charID", self.info["char_id"])

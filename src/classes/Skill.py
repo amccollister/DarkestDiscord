@@ -23,6 +23,18 @@ Methods:
 class Skill(object):
     def __init__(self):
         # TODO: get the skill information and modifiers
+        self.skill_id = None
+        self.info = None
+        self.db = None
+        self.hero_id = None
+        self.level = None
+        self.lower = None
+        self.upper = None
+        self.range = None
+        self.rank = None
+        self.target = None
+        self.acc_mod = None
+        self.crit_mod = None
         pass
 
     def get_skill_info(self):
