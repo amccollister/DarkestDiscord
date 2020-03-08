@@ -6,6 +6,7 @@ from discord.ext.commands import AutoShardedBot
 from src.classes.SQLHandler import SQLHandler
 from src.classes.Dungeon import Dungeon
 from src.classes.Player import Player
+from src.classes.Adventurer import Adventurer
 
 
 class DarkestBot(AutoShardedBot):
@@ -17,6 +18,7 @@ class DarkestBot(AutoShardedBot):
         # object lists for all the guilds and players
         self.dungeons = {}
         self.players = {}
+        self.adventurers = {}
 
         # establish sql connection here
         self.db = SQLHandler()
@@ -48,6 +50,11 @@ class DarkestBot(AutoShardedBot):
         if player_id not in self.players:
             self.players[player_id] = Player(self, player_id)
         return self.players[player_id]
+
+    def get_adventurer(self, adv_id):
+        if adv_id not in self.adventurers:
+            self.adventurers[adv_id] = Adventurer(self, adv_id)
+        return self.adventurers[adv_id]
 
     async def on_ready(self):
         print("------------")
