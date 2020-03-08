@@ -39,6 +39,10 @@ class Dungeon(object):
         self.party = None
         if not self.info["prefix"]:
             self.set_prefix(DEFAULT_PREFIX)
+        self.rooms = None
+        self.mission = None
+        self.reward = None
+        self.location = None
 
     def update_info(self):
         self.info = self.get_dungeon_info()
@@ -60,3 +64,27 @@ class Dungeon(object):
         self.party = party
         self.bot.db.update_row("DUNGEON", "partyID = {0}".format(party_id), "guildID = {}".format(self.guild_id))
         self.update_info()
+
+    def start_mission(self):
+        # enable the dungeon channel
+        # move the party into the first room
+        pass
+
+    def move_party(self):
+        # move the party where they're supposed to go
+        # in or out of the dungeon
+        pass
+
+    def complete_mission(self):
+        # disband the party and dole out rewards
+        # get rid of all the rooms
+        pass
+
+    def generate_dungeon(self):
+        # create the dungeon and a map of it
+        pass
+
+    def generate_map(self):
+        # generate a visual of the dungeon that the party is navigating.
+        # probably do some sort of up/down/left/right type deal?
+        pass
