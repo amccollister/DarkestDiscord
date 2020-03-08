@@ -42,14 +42,18 @@ import src.utils as util
 
 
 class Adventurer(object):
-    def __init__(self, bot, hero_id, player_id):
+    def __init__(self, bot, hero_id):
         #TODO: add equipped trinket information
         #TODO: reference quirks, effects, trinkets, skills, and maybe party?
         self.bot = bot
-        self.hero_id = hero_id
-        self.player_id = player_id
         self.info = self.get_adventurer_info()
+        self.hero_id = hero_id
+        self.player_id = self.info["player_id"]
         self.stats = self.get_stats()
+        self.quirks = None
+        self.effects = None
+        self.trinkets = None
+        self.skills = None
 
     def get_adventurer_info(self):
         return self.bot.db.get_row("ADVENTURERS", "heroID", self.hero_id)
